@@ -1,0 +1,6669 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Token Hub 比價台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#F4F6F2; --surface:#FFFFFF; --surface2:#EAEEE4; --surface3:#F9FAF7;
+  --ink:#161A16; --ink2:#3D453A; --muted:#6C7462; --rule:#D9DFD0; --rule2:#E9EDE2;
+  --accent:#1E6A55; --accent-soft:#DCEBE4; --best:#96591A; --best-soft:#F6EAD6;
+  --warn:#8A4B2A; --shadow:0 1px 2px rgba(22,26,22,.05),0 6px 20px -12px rgba(22,26,22,.18);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans","PingFang HK","Hiragino Sans CNS","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  --serif:"IBM Plex Serif","Songti TC","Noto Serif TC",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#131611; --surface:#1A1E17; --surface2:#232821; --surface3:#181C16;
+    --ink:#E9ECE4; --ink2:#C3C9BB; --muted:#949C8A; --rule:#2D3329; --rule2:#242A21;
+    --accent:#68C4A6; --accent-soft:#1D3A31; --best:#E3A552; --best-soft:#3A2E19;
+    --warn:#D98C63; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131611; --surface:#1A1E17; --surface2:#232821; --surface3:#181C16;
+  --ink:#E9ECE4; --ink2:#C3C9BB; --muted:#949C8A; --rule:#2D3329; --rule2:#242A21;
+  --accent:#68C4A6; --accent-soft:#1D3A31; --best:#E3A552; --best-soft:#3A2E19;
+  --warn:#D98C63; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+button,input,select,output,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer}
+img{max-width:100%;height:auto}
+body{
+  margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1400px;margin:0 auto;padding:0 20px 80px}
+a{color:var(--accent)}
+h1,h2,h3{text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- masthead ---------- */
+header.mast{padding:36px 0 22px;border-bottom:1px solid var(--rule)}
+.mast h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em;margin:6px 0 8px}
+.mast p{margin:0;color:var(--ink2);max-width:62ch}
+.mast .stamp{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.stamp span{font-family:var(--mono);font-size:11.5px;padding:3px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--muted);background:var(--surface3)}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:2px;margin:22px 0 0;border-bottom:1px solid var(--rule)}
+.tab{appearance:none;border:0;background:none;font-family:var(--sans);font-size:14.5px;font-weight:600;
+  color:var(--muted);padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab small{display:block;font-weight:400;font-size:11px;font-family:var(--mono);color:var(--muted)}
+
+/* ---------- controls ---------- */
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow)}
+.controls{margin-top:18px;padding:16px 18px;display:grid;gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.ctl{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ctl[hidden],[hidden]{display:none!important}
+.ctl > label{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+input[type=search],select,input[type=number]{
+  font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--surface3);
+  border:1px solid var(--rule);border-radius:2px;padding:7px 9px;width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.rangeRow{display:flex;align-items:center;gap:10px}
+.rangeRow output{font-family:var(--mono);font-size:13px;color:var(--ink);min-width:62px;text-align:right}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-family:var(--sans);font-size:12.5px;padding:4px 10px;border:1px solid var(--rule);border-radius:99px;
+  background:var(--surface3);color:var(--muted);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.chip:hover{color:var(--ink)}
+.segs{display:flex;border:1px solid var(--rule);border-radius:2px;overflow:hidden;width:fit-content;max-width:100%;flex-wrap:wrap}
+.seg{font-family:var(--sans);font-size:13px;padding:6px 12px;background:var(--surface3);border:0;
+  border-right:1px solid var(--rule);color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg:last-child{border-right:0}
+.seg[aria-pressed="true"]{background:var(--accent);color:var(--surface);font-weight:600}
+.ctl.wide{grid-column:1/-1}
+
+/* ---------- kpi ---------- */
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:14px}
+.kpi{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:12px 14px}
+.kpi b{display:block;font-family:var(--mono);font-size:24px;font-weight:600;line-height:1.1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--muted)}
+.kpi.hl b{color:var(--best)}
+section.findings{margin:26px 0 4px}
+.findings h2{font-family:var(--serif);font-size:22px;font-weight:600}
+.findings .lede{color:var(--ink2);max-width:70ch;margin:8px 0 0}
+.findings .lede b{color:var(--ink)}
+.fgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));margin-top:16px}
+.finding{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:14px 15px;
+  display:flex;flex-direction:column;gap:6px}
+.finding .stat{font-family:var(--mono);font-size:27px;font-weight:600;line-height:1;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;color:var(--accent)}
+.finding.alert .stat{color:var(--best)}
+.finding h3{font-size:14.5px;font-weight:600;letter-spacing:-.005em}
+.finding p{margin:0;font-size:13px;color:var(--ink2);line-height:1.5}
+.finding p code{font-family:var(--mono);font-size:11.5px;background:var(--surface2);padding:1px 4px;border-radius:2px}
+.howto{margin-top:16px;background:var(--surface3);border:1px solid var(--rule);border-radius:3px;padding:14px 16px}
+.howto h3{font-size:14px;font-weight:600;margin-bottom:8px}
+.howto dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px}
+.howto dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);padding-top:3px;white-space:nowrap}
+.howto dd{margin:0;color:var(--ink2)}
+.howto dd code{font-family:var(--mono);font-size:12px;background:var(--surface2);padding:1px 5px;border-radius:2px}
+@media (max-width:560px){.howto dl{grid-template-columns:1fr;gap:2px 0}.howto dt{padding-top:8px}}
+.callout{margin-top:12px;background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;padding:13px 16px;font-size:14px;color:var(--ink2)}
+.callout b{color:var(--ink)}
+.callout .num{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--accent);font-weight:600}
+.callout p{margin:0 0 7px}
+.callout p:last-child{margin-bottom:0}
+td.derived .big{border-bottom:1px dashed var(--rule)}
+
+/* ---------- table ---------- */
+.tableWrap{margin-top:14px;overflow:auto;max-height:76vh;background:var(--surface);border:1px solid var(--rule);
+  border-radius:3px;box-shadow:var(--shadow)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13.5px}
+thead th{position:sticky;top:0;z-index:3;background:var(--surface2);text-align:left;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;padding:9px 12px;border-bottom:1px solid var(--rule);white-space:nowrap}
+thead th.grp{text-align:center;border-left:1px solid var(--rule)}
+thead th small{display:block;text-transform:none;letter-spacing:0;font-size:10px;font-weight:400;opacity:.8}
+tbody td{padding:8px 12px;border-bottom:1px solid var(--rule2);vertical-align:top}
+tbody tr:hover td{background:var(--surface3)}
+td.model{min-width:250px;position:sticky;left:0;background:var(--surface);z-index:2;border-right:1px solid var(--rule)}
+tbody tr:hover td.model{background:var(--surface3)}
+thead th.model{position:sticky;left:0;z-index:4;border-right:1px solid var(--rule)}
+.mName{font-weight:600;color:var(--ink);letter-spacing:-.005em}
+.mMeta{font-size:11.5px;color:var(--muted);margin-top:1px}
+.vTag{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;
+  border-left:1px solid var(--rule2)}
+td.num .pair{font-size:11px;color:var(--muted);display:block;margin-top:1px}
+td.num .big{font-size:13.5px;font-weight:500}
+td.blank{color:var(--rule);text-align:center;font-family:var(--mono)}
+td.best{background:var(--best-soft)}
+tbody tr:hover td.best{background:var(--best-soft)}
+td.best .big{color:var(--best);font-weight:600}
+.tick{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--best);display:block}
+.delta{font-family:var(--mono);font-size:11px}
+.dn{color:var(--accent)} .up{color:var(--warn)}
+.badge{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;padding:1px 4px;
+  border:1px solid var(--rule);border-radius:2px;color:var(--muted);margin-left:5px;vertical-align:1px}
+.badge.est{color:var(--warn);border-color:var(--warn)}
+.empty{padding:48px 20px;text-align:center;color:var(--muted)}
+
+/* ---------- notes ---------- */
+section.notes{margin-top:34px}
+section.notes h2{font-family:var(--serif);font-size:21px;font-weight:600;margin-bottom:4px}
+details{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:0;margin-top:10px}
+summary{cursor:pointer;padding:12px 16px;font-weight:600;font-size:14px;list-style:none;display:flex;
+  justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);color:var(--muted)}
+details[open] summary::after{content:"−"}
+.dbody{padding:0 16px 16px;color:var(--ink2);font-size:14px}
+.dbody ul{padding-left:18px;margin:8px 0}
+.dbody li{margin:5px 0}
+.dbody code{font-family:var(--mono);font-size:12.5px;background:var(--surface2);padding:1px 5px;border-radius:2px}
+.srcTable{width:100%;font-size:13px;margin-top:8px}
+.srcTable td{padding:5px 8px;border-bottom:1px solid var(--rule2);vertical-align:top}
+.srcTable td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--rule);color:var(--muted);font-size:12.5px}
+.themeBtn{position:fixed;right:14px;bottom:14px;z-index:9;background:var(--surface);border:1px solid var(--rule);
+  border-radius:99px;padding:7px 13px;font-family:var(--mono);font-size:11px;color:var(--muted);cursor:pointer;
+  box-shadow:var(--shadow)}
+@media (max-width:640px){
+  .wrap{padding:0 12px 60px}
+  td.model,thead th.model{position:static}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  body{background:#fff;color:#000}
+  .controls,.tabs,.themeBtn,.kpis{display:none!important}
+  .tableWrap{max-height:none;overflow:visible;box-shadow:none}
+  thead th,td.model{position:static}
+  details{break-inside:avoid} details:not([open]) .dbody{display:block}
+  details summary::after{content:""}
+  .findings{break-inside:avoid}
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow">HK01 · 模型採購比價</div>
+  <h1>Token Hub 比價台</h1>
+  <p>同一隻 model、唔同 provider 擺埋同一 row 比。價格全部換算成美元；文本按 1M tokens，生圖按每張，生片按每秒。假設可以喺下面改，個表即刻跟住計。</p>
+  <div class="stamp">
+    <span id="stampDate">資料截至 —</span>
+    <span>來源：騰訊雲 · 悅智 TokenHub · Google 官方定價頁</span>
+    <span id="stampCount">— 個報價點</span>
+    <a href="#tool" style="font-family:var(--mono);font-size:11.5px;padding:3px 9px;border:1px solid var(--accent);
+       border-radius:2px;color:var(--accent);background:var(--accent-soft);text-decoration:none">直接去比價表 ↓</a>
+  </div>
+</header>
+
+<section class="findings">
+  <div class="eyebrow">重點結論</div>
+  <h2>比完之後，五件值得同老細講嘅事</h2>
+  <p class="lede">「同一隻 model、唔同 provider」呢個 case 實情比預期簡單：<b>騰訊三個平台都係照原廠目錄價轉售</b>，而<b>悅智份報價單根本冇絕對價，只有折扣率</b>。所以悅智一定係最平嗰欄，冇得比。真正要揀嘅係三樣嘢 —— 邊間原廠折扣高、同級數之間邊隻 model 抵、騰訊揀邊個 region。</p>
+
+  <div class="fgrid">
+    <div class="finding">
+      <div class="stat" id="fStat1">−21.1%</div>
+      <h3>換 Gemini 供應商即刻慳</h3>
+      <p>悅智收 Google 正價 <b>75%</b>，現用嗰家收 <b id="fCur">95%</b>。同一隻 model、同一個官方價，直接爭呢個數。下面表入面有 23 個 Gemini 報價點可以逐個對；改咗個折扣輸入框，呢度同成個表即刻跟住計。</p>
+    </div>
+
+    <div class="finding">
+      <div class="stat">＝</div>
+      <h3>騰訊 ＝ 原廠目錄價轉售</h3>
+      <p>Claude Opus 5 <code>$5 / $25</code>、Gemini 3.5 Flash <code>$1.5 / $9</code>、Haiku 4.5 <code>$1 / $5</code> —— 同官方一個仙都唔差。所以騰訊嘅賣點唔喺價，係一個 API 打通 Gemini／Claude／GPT／Grok／Sora／Veo 加一堆國產模型。</p>
+    </div>
+
+    <div class="finding alert">
+      <div class="stat">×2</div>
+      <h3>騰訊選區有伏</h3>
+      <p>DeepSeek V3.2：新加坡 <code>$0.57 / $1.71</code>，廣州 <code>$0.28 / $0.42</code> —— 同一個供應商、同一隻 model，貴成一倍。開通之前記得問清楚落喺邊個 region。</p>
+    </div>
+
+    <div class="finding">
+      <div class="stat">12</div>
+      <h3>悅智唔係咩都有</h3>
+      <p>文本嗰邊有 12 個報價點係騰訊有貨、悅智份單根本冇報 —— xAI Grok、階躍星辰全線，生片仲有 OpenAI Sora。如果要用呢啲，冇得只靠悅智。</p>
+    </div>
+
+    <div class="finding alert">
+      <div class="stat">+25%</div>
+      <h3>Veo 騰訊反而貴過 Google</h3>
+      <p>Veo 3.1 標準版 1080P 有聲：Google 官方 <code>$0.40/秒</code>，騰訊國際站收 <code>$0.50/秒</code>。唔好假設騰訊一定跟足官方價，生片呢邊佢有自己加成。</p>
+    </div>
+  </div>
+
+  <div class="howto">
+    <h3>你提過嗰啲「計費方法唔同」，我係咁樣拉平嘅</h3>
+    <dl>
+      <dt>峰谷計費</dt>
+      <dd>只有 DeepSeek 原廠直供分峰谷（北京時間 9–12、14–18 為高峰，價錢係空閒兩倍）。上面有「全當高峰／全當空閒／全部顯示」切換，跟你講嘅保守做法可以一撳全當高峰。</dd>
+      <dt>快取命中</dt>
+      <dd>有滑桿，<code>有效輸入價 = 輸入 ×(1−命中率) + 快取價 × 命中率</code>。冇公佈快取價嘅型號一律用足全價，唔會靠估。</dd>
+      <dt>輸入輸出比例</dt>
+      <dd><code>綜合單價 = (R × 有效輸入 + 輸出) ÷ (R+1)</code>，預設 4:1，可以拉。冇呢個單一數字就冇得跨 provider 排名。</dd>
+      <dt>階梯計價</dt>
+      <dd>首百萬、<code>&gt;200k token</code>、<code>&lt;272K context</code>、<code>≤32K</code> 呢啲檔位，每個檔獨立一行，唔會撈埋當一個價。</dd>
+      <dt>解析度</dt>
+      <dd>生圖同生片做咗第二個維度：揀 1K／2K／4K，或者 540P→4K，成個表跟住換。有聲／無聲、參考生／文生亦都分開行。</dd>
+      <dt>唔可比嘅</dt>
+      <dd>某個 provider 冇上架嗰隻 model，個格留白，唔會硬砌對照 —— 你講過「冇就吉咗佢」。</dd>
+    </dl>
+  </div>
+</section>
+
+<div id="tool" style="scroll-margin-top:12px"></div>
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" data-kind="t2t" aria-selected="true">文本 Text→Text<small id="cnt-t2t"></small></button>
+  <button class="tab" role="tab" data-kind="t2i" aria-selected="false">生圖 Text→Image<small id="cnt-t2i"></small></button>
+  <button class="tab" role="tab" data-kind="t2v" aria-selected="false">生片 Text→Video<small id="cnt-t2v"></small></button>
+</div>
+
+<div class="panel controls">
+  <div class="ctl">
+    <label for="q">搜尋型號</label>
+    <input type="search" id="q" placeholder="gemini / claude / kimi …" autocomplete="off">
+  </div>
+  <div class="ctl" id="ctlRatio">
+    <label for="ratio">輸入 : 輸出 比例</label>
+    <div class="rangeRow"><input type="range" id="ratio" min="1" max="30" step="1" value="4"><output id="ratioOut">4 : 1</output></div>
+  </div>
+  <div class="ctl" id="ctlCache">
+    <label for="cache">快取命中率</label>
+    <div class="rangeRow"><input type="range" id="cache" min="0" max="100" step="5" value="0"><output id="cacheOut">0%</output></div>
+  </div>
+  <div class="ctl" id="ctlRes" hidden>
+    <label for="res">解析度</label>
+    <select id="res"></select>
+  </div>
+  <div class="ctl">
+    <label for="sort">排序</label>
+    <select id="sort">
+      <option value="best">最低價（平→貴）</option>
+      <option value="bestDesc">最低價（貴→平）</option>
+      <option value="vendor">按原廠</option>
+      <option value="name">按型號名</option>
+    </select>
+  </div>
+  <div class="ctl" id="ctlPeak">
+    <label>峰谷計費</label>
+    <div class="segs" id="peakSeg">
+      <button class="seg" data-peak="all" aria-pressed="true">全部顯示</button>
+      <button class="seg" data-peak="peak" aria-pressed="false">全當高峰</button>
+      <button class="seg" data-peak="off" aria-pressed="false">全當空閒</button>
+    </div>
+  </div>
+  <div class="ctl">
+    <label for="curDisc">現用 Gemini 供應商折扣</label>
+    <div class="rangeRow"><input type="number" id="curDisc" min="0" max="100" step="1" value="95"><output>% 正價</output></div>
+  </div>
+  <div class="ctl wide">
+    <label>原廠篩選</label>
+    <div class="chips" id="vendorChips"></div>
+  </div>
+  <div class="ctl wide">
+    <label>顯示欄位</label>
+    <div class="chips" id="colChips">
+      <button class="chip" id="multiOnly" aria-pressed="false" style="border-style:dashed">只睇 2 個以上報價渠道</button>
+    </div>
+  </div>
+</div>
+
+<div class="kpis" id="kpis"></div>
+<div class="callout" id="callout"></div>
+
+<div class="tableWrap"><table id="tbl">
+  <thead><tr id="hrow"></tr></thead>
+  <tbody id="tbody"></tbody>
+</table></div>
+<div class="empty" id="empty" hidden>冇符合條件嘅型號。試下清空搜尋或者放寬原廠篩選。</div>
+
+<section class="notes">
+  <h2>點樣比先算公道</h2>
+  <p style="color:var(--ink2);max-width:68ch;margin:6px 0 0">每間 provider 計費方式都唔同（峰谷、快取、階梯、分辨率），所以下面每個假設都攤開講清楚。你改假設，個表就跟住重算。</p>
+
+  <details open><summary>比較方法：一句話講晒</summary><div class="dbody">
+    <ul>
+      <li><b>綜合單價</b>＝<code>(R × 有效輸入價 + 輸出價) ÷ (R + 1)</code>，R 就係上面個「輸入:輸出 比例」。單一數字先可以跨 provider 排名。</li>
+      <li><b>有效輸入價</b>＝<code>輸入價 ×(1 − 快取命中率) + 快取價 × 快取命中率</code>。冇公佈快取價嘅型號，一律當冇快取（用足全價），唔會靠估。</li>
+      <li><b>悅智 TokenHub</b> 份報價單淨係畀<b>折扣率</b>，冇絕對價。所以佢嘅價 ＝ <code>原廠基準價 × 折扣率</code>。折扣率係按原廠計，同一原廠所有型號共用。</li>
+      <li><b>峰谷</b>：只有 DeepSeek 原廠直供分峰谷（北京 9-12、14-18 為高峰，價錢係空閒兩倍）。老細講過保守起見可以全部當高峰計 — 上面個切換掣做到。</li>
+      <li>同一 model 唔同 provider 冇上架嘅，個格留白，唔會硬砌對照。</li>
+      <li>虛線底嘅數字（悅智、現用供應商）係<b>推算價</b> ＝ 基準價 × 折扣，唔係對方直接報嘅絕對價。實線嘅係報價表照抄。</li>
+      <li>向量模型（Gemini Embedding $0.15／騰訊 Kinfra $0.07–0.252）唔屬於 text→text，冇收入本表。</li>
+    </ul>
+  </div></details>
+
+  <details><summary>「原廠基準價」逐個來源交代</summary><div class="dbody">
+    <p>悅智嘅折扣要有個底價先算到。呢個底價每一行都標明出處：</p>
+    <table class="srcTable"><tbody>
+      <tr><td>官方定價頁</td><td>Google Gemini：直接用 <i>Gemini Developer API 定價</i>（paid tier、standard，非 Batch/Flex/Priority）。呢個係唯一一份真·官方文件。</td></tr>
+      <tr><td>騰訊國際站</td><td>Anthropic Claude、OpenAI GPT、xAI Grok：騰訊國際站報價同原廠美元目錄價完全一致（Opus 5 = $5/$25、Sonnet 5 = $3/$15、Haiku 4.5 = $1/$5），所以直接當原廠價用。</td></tr>
+      <tr><td>騰訊新加坡</td><td>GLM／Kimi／MiniMax／混元：騰訊「語言模型」平台新加坡區報價係整數美元（例：GLM-5.3 = 1.4/4.4、Kimi K3 = 3/15），最似原廠國際版目錄價，用嚟做基準。</td></tr>
+      <tr><td>騰訊廣州</td><td>DeepSeek V3.2：廣州區 0.28/0.42 同 DeepSeek 官方美元價一致；新加坡區反而貴一倍（0.57/1.71）。</td></tr>
+    </tbody></table>
+    <p style="margin-top:10px">凡標住 <span class="badge est">推定</span> 嘅，即係嗰個基準價唔係直接嚟自原廠文件，而係由騰訊報價推回去 — 睇趨勢 OK，落單前要同供應商 double check。</p>
+  </div></details>
+
+  <details><summary>三個騰訊欄位有咩分別</summary><div class="dbody">
+    <ul>
+      <li><b>騰訊·新加坡 / 廣州</b>：騰訊雲「語言模型」平台（<code>模型价格.md</code>）。同一隻 model 不同 region 價錢可以差成倍，DeepSeek V3.2 就係例子。</li>
+      <li><b>騰訊·國際站</b>：騰訊雲「VOD AIGC 大模型」平台（<code>模型单价</code> 報價表）。呢個平台先有 Gemini、Claude、GPT、Grok、Sora、Veo 呢啲海外模型。原表同時列國內站人民幣同國際站美元價，本表只取美元。</li>
+      <li><b>騰訊·混元平台</b>（生圖/生片分頁）：<code>模型价格.md</code> 嘅視覺模型段，按 token 用量折算成每張／每秒。</li>
+      <li>國際站備註：港澳免稅，其餘國家要另外交稅費 — 呢個表未計稅。</li>
+    </ul>
+  </div></details>
+
+  <details><summary>未計入嘅嘢（落單前記得問）</summary><div class="dbody">
+    <ul>
+      <li><b>稅</b>：悅智報價單寫明海外模型如用人民幣結算要加 15 個點（8% 非貿付匯稅 + 1% 附加稅 + 6% 增值稅），公式係 <code>美金金額 × 匯率 × 1.15</code>。用美元結算就唔使。騰訊國際站港澳免稅。</li>
+      <li><b>Batch / Flex / Priority</b>：Google 官方 Batch 平一半，Flex、Priority 各有價目。本表一律只計 Standard。</li>
+      <li><b>前置條件</b>：悅智全部係預付，用量大 case by case；AWS Bedrock／GCP Vertex／Azure 通路寫「用量申請」，即係要傾。報價有效期 15–30 日。</li>
+      <li><b>工具費</b>：Google Search grounding（Gemini 3.x 每月 5,000 次免費，之後 $14/1,000 次）、Maps grounding、file search 嘅 embedding 費，全部另計。</li>
+      <li><b>限時優惠</b>：GLM-5.3-Flash 至 2026-09-10 23:59 半價；OpenAI 5.6-sol 26.9.2 後限時優惠；Gemini 3.6/3.7/3.8 Flash 2027-01-01 起加價一倍 — 表入面兩個價都列咗。</li>
+      <li><b>雜項按次費</b>：可靈人臉識別、Vidu 主體識別／聲音複刻、Claude Web 搜索等，騰訊另有按次收費。</li>
+    </ul>
+  </div></details>
+
+  <details><summary>呢個檔點樣更新</summary><div class="dbody">
+    <p>整個表由三個檔砌出嚟，全部喺同一個資料夾入面：</p>
+    <table class="srcTable"><tbody>
+      <tr><td>build/build_data.py</td><td>所有報價數字嘅唯一出處。騰訊嗰啲圖片報價表係人手轉錄咗入去呢度。改價、加型號都係改呢個檔。</td></tr>
+      <tr><td>data.json</td><td>跑 <code>python3 build/build_data.py</code> 產生。結構化報價，想倒入 Excel 或者第二個系統可以直接用。</td></tr>
+      <tr><td>index.html</td><td>單一檔案、自足、離線都開得（字體要上網，冇網就用系統字體，唔影響數字）。用 <code>build/template.html</code> 加 <code>data.json</code> 砌成。</td></tr>
+    </tbody></table>
+    <p style="margin-top:10px">重新產生：跑 <code>python3 build/build_data.py</code>，再將 <code>data.json</code> 塞返入 <code>build/template.html</code> 嗰個 payload 佔位符位置就得（<code>build/make.py</code> 幫你做晒）。</p>
+  </div></details>
+
+  <details><summary>縮寫對照</summary><div class="dbody">
+    <p>騰訊報價表用咗一堆縮寫，已經全部還原成正名：</p>
+    <table class="srcTable"><tbody>
+      <tr><td>GG</td><td>Google Gemini（nano 2.5 / 3.0 / 3.1 = Nano Banana 系列）</td></tr>
+      <tr><td>GV</td><td>Google Veo</td></tr>
+      <tr><td>CD</td><td>Anthropic Claude</td></tr>
+      <tr><td>OG</td><td>OpenAI GPT（image-2 = GPT Image 2）</td></tr>
+      <tr><td>OS</td><td>OpenAI Sora</td></tr>
+      <tr><td>GK</td><td>xAI Grok</td></tr>
+      <tr><td>SI / SV</td><td>字節 Seedream（圖）／ Seedance（片）</td></tr>
+      <tr><td>JI / JV</td><td>字節即夢 Jimeng（圖／片）</td></tr>
+      <tr><td>H2 / H3</td><td>MiniMax 海螺 Hailuo</td></tr>
+      <tr><td>ST</td><td>階躍星辰 StepFun</td></tr>
+      <tr><td>Hy / Hunyuan</td><td>騰訊混元</td></tr>
+      <tr><td>MJ</td><td>Midjourney</td></tr>
+      <tr><td>Wan</td><td>阿里通義萬相</td></tr>
+    </tbody></table>
+  </div></details>
+</section>
+
+<footer>
+  <p style="margin:0 0 8px">呢個係單一 HTML 檔，雙擊就開得，唔使裝嘢、唔使上任何平台。想 send 畀人直接 send 個檔，或者喺瀏覽器撳列印存成 PDF（列印時控制項會自動收起，成個表會攤開唔剪走）。</p>
+  資料來源：<code>providers/Gemini Developer API 定價.md</code>、<code>providers/tencent/模型价格.md</code>、<code>providers/tencent/模型单价/*.png</code>（人手轉錄）、<code>providers/yz/悦如Token Hub模型报价单.xlsx</code>。
+  騰訊報價表最後更新 2026-09-04。價格會變，落單前請以供應商正式報價為準。
+</footer>
+</div>
+<button class="themeBtn" id="themeBtn">主題：自動</button>
+
+<script id="payload" type="application/json">{
+ "generated": "2026-09-10",
+ "fxNote": "騰訊國際站人民幣→美元換算比例約 6.49（部分型號逐一定價，非統一匯率）",
+ "vendors": {
+  "google": "Google",
+  "anthropic": "Anthropic",
+  "openai": "OpenAI",
+  "xai": "xAI (Grok)",
+  "zhipu": "智譜 GLM",
+  "moonshot": "月之暗面 Kimi",
+  "deepseek": "DeepSeek",
+  "minimax": "MiniMax",
+  "tencent": "騰訊混元",
+  "stepfun": "階躍星辰",
+  "bytedance": "字節",
+  "seedream": "字節 Seedream",
+  "seedance": "字節 Seedance",
+  "vidu": "生數 Vidu",
+  "kling": "快手可靈",
+  "pixverse": "愛詩 PixVerse",
+  "hailuo": "MiniMax 海螺",
+  "alibaba": "阿里",
+  "midjourney": "Midjourney",
+  "qwen": "阿里千問",
+  "other": "其他"
+ },
+ "yzFactor": {
+  "anthropic": 0.85,
+  "google": 0.75,
+  "openai": 0.8,
+  "zhipu": 0.85,
+  "deepseek": 0.7,
+  "minimax": 0.85,
+  "moonshot": 0.95,
+  "tencent": 0.65,
+  "bytedance": 0.7,
+  "seedream": 0.95,
+  "seedance": 0.95,
+  "vidu": 0.7,
+  "kling": 0.7,
+  "pixverse": 0.7,
+  "hailuo": 0.7,
+  "alibaba": 0.7
+ },
+ "rows": [
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.8 Flash",
+   "variant": "",
+   "cond": "2026-12-31 前價",
+   "peak": null,
+   "note": "2027-01-01 起：1.50 / 0.15 / 7.50",
+   "p": {
+    "official": [
+     0.75,
+     0.075,
+     3.75
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.75,
+     0.075,
+     3.75
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m000",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.8 Flash",
+   "variant": "",
+   "cond": "2027-01-01 起價",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.5,
+     0.15,
+     7.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.5,
+     0.15,
+     7.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m001",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.7 Flash",
+   "variant": "",
+   "cond": "2026-12-31 前價",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.75,
+     0.075,
+     3.75
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.75,
+     0.075,
+     3.75
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m002",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.7 Flash",
+   "variant": "",
+   "cond": "2027-01-01 起價",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.5,
+     0.15,
+     7.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.5,
+     0.15,
+     7.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m003",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.6 Flash",
+   "variant": "",
+   "cond": "2026-12-31 前價",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.75,
+     0.075,
+     3.75
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.75,
+     0.075,
+     3.75
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m004",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.5 Flash",
+   "variant": "",
+   "cond": "文字/圖/影片/音訊",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.5,
+     0.15,
+     9.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.5,
+     0.15,
+     9.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m005",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.5 Flash-Lite",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.3,
+     0.03,
+     2.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.3,
+     0.03,
+     2.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m006",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.1 Pro Preview",
+   "variant": "",
+   "cond": "輸入 ≤200k token",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.0,
+     0.2,
+     12.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.0,
+     0.2,
+     12.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m007",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.1 Pro Preview",
+   "variant": "",
+   "cond": "輸入 >200k token",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     4.0,
+     0.4,
+     18.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     4.0,
+     0.4,
+     18.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m008",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.1 Flash-Lite",
+   "variant": "",
+   "cond": "文字/圖/影片",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.25,
+     0.025,
+     1.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.25,
+     0.025,
+     1.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m009",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.1 Flash-Lite",
+   "variant": "",
+   "cond": "音訊輸入",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.5,
+     0.05,
+     1.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.5,
+     0.05,
+     1.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m010",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.1 Flash-Lite Preview",
+   "variant": "",
+   "cond": "文字/圖/影片",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.25,
+     0.025,
+     1.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.25,
+     0.025,
+     1.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m011",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3 Flash Preview",
+   "variant": "",
+   "cond": "文字/圖/影片",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.5,
+     0.05,
+     3.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.5,
+     0.05,
+     3.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m012",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3 Flash Preview",
+   "variant": "",
+   "cond": "音訊輸入",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.0,
+     0.1,
+     3.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.0,
+     0.1,
+     3.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m013",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini Omni Flash",
+   "variant": "",
+   "cond": "文字輸出",
+   "peak": null,
+   "note": "影片輸出 $17.50",
+   "p": {
+    "official": [
+     1.5,
+     null,
+     9.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": null
+   },
+   "officialBase": "google-doc",
+   "id": "m014",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 2.5 Pro",
+   "variant": "",
+   "cond": "輸入 ≤200k token",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.25,
+     0.125,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.125,
+     10.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m015",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 2.5 Pro",
+   "variant": "",
+   "cond": "輸入 >200k token",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.5,
+     0.25,
+     15.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.5,
+     0.25,
+     15.0
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m016",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 2.5 Flash",
+   "variant": "",
+   "cond": "文字/圖/影片",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.3,
+     0.03,
+     2.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.3,
+     0.03,
+     2.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m017",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 2.5 Flash",
+   "variant": "",
+   "cond": "音訊輸入",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.0,
+     0.1,
+     2.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.0,
+     0.1,
+     2.5
+    ]
+   },
+   "officialBase": "google-doc",
+   "id": "m018",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 2.5 Flash-Lite",
+   "variant": "",
+   "cond": "文字/圖/影片",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.1,
+     0.01,
+     0.4
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": null
+   },
+   "officialBase": "google-doc",
+   "id": "m019",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 2.5 Flash-Lite",
+   "variant": "",
+   "cond": "音訊輸入",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.3,
+     0.03,
+     0.4
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": null
+   },
+   "officialBase": "google-doc",
+   "id": "m020",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.5 Transcribe",
+   "variant": "",
+   "cond": "音訊轉錄",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.0,
+     null,
+     12.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": null
+   },
+   "officialBase": "google-doc",
+   "id": "m021",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "google",
+   "model": "Gemini 3.5 Live Translate",
+   "variant": "",
+   "cond": "即時翻譯",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     3.5,
+     null,
+     21.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": null
+   },
+   "officialBase": "google-doc",
+   "id": "m022",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Opus 5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     25.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     25.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m023",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Sonnet 5",
+   "variant": "",
+   "cond": "2026-09-01 調價後",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     3.0,
+     0.3,
+     15.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     3.0,
+     0.3,
+     15.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m024",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Sonnet 5",
+   "variant": "",
+   "cond": "2026-08-31 前",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     2.0,
+     0.2,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.0,
+     0.2,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m025",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Fable 5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     10.0,
+     1.0,
+     50.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     10.0,
+     1.0,
+     50.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m026",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Opus 4.8",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     25.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     25.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m027",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Opus 4.7",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     25.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     25.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m028",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Opus 4.6",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     25.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     25.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m029",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Opus 4.5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     25.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     25.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m030",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Sonnet 4.6",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     3.0,
+     0.3,
+     15.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     3.0,
+     0.3,
+     15.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m031",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Sonnet 4.5",
+   "variant": "",
+   "cond": "≤200K token",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     3.0,
+     0.3,
+     15.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     3.0,
+     0.3,
+     15.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m032",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Sonnet 4.5",
+   "variant": "",
+   "cond": ">200K token",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     6.0,
+     0.6,
+     22.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     6.0,
+     0.6,
+     22.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m033",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "anthropic",
+   "model": "Claude Haiku 4.5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "騰訊只有國際站供應",
+   "p": {
+    "official": [
+     1.0,
+     0.1,
+     5.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.0,
+     0.1,
+     5.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m034",
+   "vendorLabel": "Anthropic",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 6-astra",
+   "variant": "",
+   "cond": "輸入 <272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     10.0,
+     1.0,
+     50.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     10.0,
+     1.0,
+     50.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m035",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 6-astra",
+   "variant": "",
+   "cond": "輸入 >272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     20.0,
+     2.0,
+     75.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     20.0,
+     2.0,
+     75.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m036",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-sol",
+   "variant": "",
+   "cond": "輸入 <272K・26.9.2 後限時優惠",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     4.0,
+     0.4,
+     20.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     4.0,
+     0.4,
+     20.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m037",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-sol",
+   "variant": "",
+   "cond": "輸入 >272K・26.9.2 後限時優惠",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     8.0,
+     0.8,
+     30.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     8.0,
+     0.8,
+     30.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m038",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-sol",
+   "variant": "",
+   "cond": "輸入 <272K・26.9.2 前價",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     30.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     30.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m039",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-sol",
+   "variant": "",
+   "cond": "輸入 >272K・26.9.2 前價",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     10.0,
+     1.0,
+     45.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     10.0,
+     1.0,
+     45.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m040",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-terra",
+   "variant": "",
+   "cond": "輸入 <272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.0,
+     0.2,
+     12.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.0,
+     0.2,
+     12.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m041",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-terra",
+   "variant": "",
+   "cond": "輸入 >272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     4.0,
+     0.4,
+     18.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     4.0,
+     0.4,
+     18.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m042",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-luna",
+   "variant": "",
+   "cond": "輸入 <272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.2,
+     0.02,
+     1.2
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.2,
+     0.02,
+     1.2
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m043",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.6-luna",
+   "variant": "",
+   "cond": "輸入 >272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.4,
+     0.04,
+     1.8
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.4,
+     0.04,
+     1.8
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m044",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.5",
+   "variant": "",
+   "cond": "輸入 <272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     30.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     30.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m045",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.5",
+   "variant": "",
+   "cond": "輸入 >272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     10.0,
+     1.0,
+     45.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     10.0,
+     1.0,
+     45.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m046",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.4-pro",
+   "variant": "",
+   "cond": "輸入 <272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     30.0,
+     null,
+     180.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     30.0,
+     null,
+     180.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m047",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.4-pro",
+   "variant": "",
+   "cond": "輸入 >272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     60.0,
+     null,
+     270.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     60.0,
+     null,
+     270.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m048",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.4",
+   "variant": "",
+   "cond": "輸入 <272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.5,
+     0.25,
+     15.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.5,
+     0.25,
+     15.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m049",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.4",
+   "variant": "",
+   "cond": "輸入 >272K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     22.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     22.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m050",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.4-mini",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.75,
+     0.075,
+     4.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.75,
+     0.075,
+     4.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m051",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.4-nano",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.2,
+     0.02,
+     1.25
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.2,
+     0.02,
+     1.25
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m052",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.3-codex",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.75,
+     0.18,
+     14.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.75,
+     0.18,
+     14.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m053",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.3-chat-latest",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.75,
+     0.18,
+     14.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.75,
+     0.18,
+     14.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m054",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.2",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.75,
+     0.175,
+     14.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.75,
+     0.175,
+     14.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m055",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.2-chat-latest",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.75,
+     0.18,
+     14.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.75,
+     0.18,
+     14.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m056",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.1",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.25,
+     0.125,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.125,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m057",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.1-chat-latest",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.25,
+     0.125,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.125,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m058",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5.1-chat",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.25,
+     0.125,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.125,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m059",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.25,
+     0.125,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.125,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m060",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5-chat-latest",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.25,
+     0.125,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.125,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m061",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5-mini",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.25,
+     0.025,
+     2.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.25,
+     0.025,
+     2.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m062",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 5-nano",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.05,
+     0.005,
+     0.4
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.05,
+     0.005,
+     0.4
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m063",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT chat-latest",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     5.0,
+     0.5,
+     30.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     5.0,
+     0.5,
+     30.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m064",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 4.1",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.0,
+     0.5,
+     8.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.0,
+     0.5,
+     8.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m065",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "openai",
+   "model": "GPT 4o",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     2.5,
+     1.25,
+     10.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.5,
+     1.25,
+     10.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m066",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "xai",
+   "model": "Grok 4.3",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     1.25,
+     0.2,
+     2.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.2,
+     2.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m067",
+   "vendorLabel": "xAI (Grok)",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "xai",
+   "model": "Grok 4.20-0309 reasoning",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     1.25,
+     0.2,
+     2.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.25,
+     0.2,
+     2.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m068",
+   "vendorLabel": "xAI (Grok)",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "xai",
+   "model": "Grok 4.20-0309 non-reasoning",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     2.0,
+     0.2,
+     6.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     2.0,
+     0.2,
+     6.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m069",
+   "vendorLabel": "xAI (Grok)",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "xai",
+   "model": "Grok 4-1-fast-reasoning",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.2,
+     0.05,
+     0.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.2,
+     0.05,
+     0.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m070",
+   "vendorLabel": "xAI (Grok)",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5.3",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcSG": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcGZ": [
+     1.1116,
+     0.2779,
+     3.8907
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m071",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5.3-Flash",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "2026-09-10 23:59 前 5 折",
+   "p": {
+    "official": [
+     0.15,
+     0.03,
+     0.5
+    ],
+    "tcSG": [
+     0.15,
+     0.03,
+     0.5
+    ],
+    "tcGZ": [
+     0.11116,
+     0.03196,
+     0.38907
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m072",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5.2",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "矽谷區同價 1.4/4.4",
+   "p": {
+    "official": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcSG": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcGZ": [
+     1.12,
+     0.28,
+     3.92
+    ],
+    "tcINTL": [
+     1.232,
+     0.308,
+     4.312
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m073",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5.1",
+   "variant": "",
+   "cond": "輸入 <32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcSG": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcGZ": [
+     0.84,
+     0.182,
+     3.36
+    ],
+    "tcINTL": [
+     0.924,
+     0.2,
+     3.696
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m074",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5.1",
+   "variant": "",
+   "cond": "輸入 ≥32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcSG": [
+     1.4,
+     0.26,
+     4.4
+    ],
+    "tcGZ": [
+     1.12,
+     0.28,
+     3.92
+    ],
+    "tcINTL": [
+     1.232,
+     0.308,
+     4.312
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m075",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5",
+   "variant": "",
+   "cond": "輸入 <32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.0,
+     0.2,
+     3.2
+    ],
+    "tcSG": [
+     1.0,
+     0.2,
+     3.2
+    ],
+    "tcGZ": [
+     0.573,
+     0.115,
+     2.58
+    ],
+    "tcINTL": [
+     0.616,
+     0.154,
+     2.772
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m076",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5",
+   "variant": "",
+   "cond": "輸入 ≥32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.0,
+     0.2,
+     3.2
+    ],
+    "tcSG": [
+     1.0,
+     0.2,
+     3.2
+    ],
+    "tcGZ": [
+     0.86,
+     0.172,
+     3.154
+    ],
+    "tcINTL": [
+     0.924,
+     0.231,
+     3.388
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m077",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5-Turbo",
+   "variant": "",
+   "cond": "輸入 <32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcSG": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcGZ": [
+     0.7,
+     0.168,
+     3.08
+    ],
+    "tcINTL": [
+     0.77,
+     0.185,
+     3.388
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m078",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5-Turbo",
+   "variant": "",
+   "cond": "輸入 ≥32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcSG": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcGZ": [
+     0.98,
+     0.252,
+     3.64
+    ],
+    "tcINTL": [
+     1.078,
+     0.277,
+     4.004
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m079",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5V-Turbo",
+   "variant": "",
+   "cond": "輸入 <32K・視覺",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcSG": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcGZ": [
+     0.7,
+     0.168,
+     3.08
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m080",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-5V-Turbo",
+   "variant": "",
+   "cond": "輸入 ≥32K・視覺",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcSG": [
+     1.2,
+     0.24,
+     4.0
+    ],
+    "tcGZ": [
+     0.98,
+     0.252,
+     3.64
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m081",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-4.7",
+   "variant": "",
+   "cond": "輸入 ≤32K・輸出 ≤0.2K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.308,
+     0.062,
+     1.232
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.308,
+     0.062,
+     1.232
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m082",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-4.7",
+   "variant": "",
+   "cond": "輸入 ≤32K・輸出 >0.2K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.462,
+     0.092,
+     2.156
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.462,
+     0.092,
+     2.156
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m083",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "zhipu",
+   "model": "GLM-4.7",
+   "variant": "",
+   "cond": "輸入 >32K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.616,
+     0.123,
+     2.464
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.616,
+     0.123,
+     2.464
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m084",
+   "vendorLabel": "智譜 GLM",
+   "yzFactor": 0.85,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "moonshot",
+   "model": "Kimi K3",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     3.0,
+     0.3,
+     15.0
+    ],
+    "tcSG": [
+     3.0,
+     0.3,
+     15.0
+    ],
+    "tcGZ": [
+     2.731,
+     0.2731,
+     13.653
+    ],
+    "tcINTL": [
+     3.0,
+     0.3,
+     15.0
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m085",
+   "vendorLabel": "月之暗面 Kimi",
+   "yzFactor": 1.0,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "moonshot",
+   "model": "Kimi K2.7 Code HighSpeed",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.9,
+     0.38,
+     8.0
+    ],
+    "tcSG": [
+     1.9,
+     0.38,
+     8.0
+    ],
+    "tcGZ": [
+     1.9,
+     0.38,
+     8.0
+    ],
+    "tcINTL": [
+     1.9,
+     0.38,
+     8.0
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m086",
+   "vendorLabel": "月之暗面 Kimi",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "moonshot",
+   "model": "Kimi K2.7 Code",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.95,
+     0.19,
+     4.0
+    ],
+    "tcSG": [
+     0.95,
+     0.19,
+     4.0
+    ],
+    "tcGZ": [
+     0.95,
+     0.19,
+     4.0
+    ],
+    "tcINTL": [
+     0.95,
+     0.19,
+     4.0
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m087",
+   "vendorLabel": "月之暗面 Kimi",
+   "yzFactor": 0.95,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "moonshot",
+   "model": "Kimi K2.6",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.858,
+     0.145,
+     3.566
+    ],
+    "tcSG": [
+     0.858,
+     0.145,
+     3.566
+    ],
+    "tcGZ": [
+     0.858,
+     0.145,
+     3.566
+    ],
+    "tcINTL": [
+     1.001,
+     0.169,
+     4.158
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m088",
+   "vendorLabel": "月之暗面 Kimi",
+   "yzFactor": 0.95,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "moonshot",
+   "model": "Kimi K2.5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.6,
+     0.1,
+     3.0
+    ],
+    "tcSG": [
+     0.6,
+     0.1,
+     3.0
+    ],
+    "tcGZ": [
+     0.56,
+     0.098,
+     2.94
+    ],
+    "tcINTL": [
+     0.616,
+     0.108,
+     3.234
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m089",
+   "vendorLabel": "月之暗面 Kimi",
+   "yzFactor": 0.95,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Pro",
+   "variant": "原廠直供",
+   "cond": "空閒時段",
+   "peak": "off",
+   "note": "",
+   "p": {
+    "official": [
+     0.66,
+     0.022,
+     1.98
+    ],
+    "tcSG": [
+     0.66,
+     0.022,
+     1.98
+    ],
+    "tcGZ": [
+     0.66,
+     0.022,
+     1.98
+    ],
+    "tcINTL": [
+     0.66,
+     0.022,
+     1.98
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m090",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Pro",
+   "variant": "原廠直供",
+   "cond": "高峰時段（京 9-12、14-18）",
+   "peak": "peak",
+   "note": "",
+   "p": {
+    "official": [
+     1.32,
+     0.044,
+     3.96
+    ],
+    "tcSG": [
+     1.32,
+     0.044,
+     3.96
+    ],
+    "tcGZ": [
+     1.32,
+     0.044,
+     3.96
+    ],
+    "tcINTL": [
+     1.32,
+     0.044,
+     3.96
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m091",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Flash",
+   "variant": "原廠直供",
+   "cond": "空閒時段",
+   "peak": "off",
+   "note": "",
+   "p": {
+    "official": [
+     0.22,
+     0.007,
+     0.66
+    ],
+    "tcSG": [
+     0.22,
+     0.007,
+     0.66
+    ],
+    "tcGZ": [
+     0.22,
+     0.007,
+     0.66
+    ],
+    "tcINTL": [
+     0.22,
+     0.007,
+     0.66
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m092",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Flash",
+   "variant": "原廠直供",
+   "cond": "高峰時段（京 9-12、14-18）",
+   "peak": "peak",
+   "note": "",
+   "p": {
+    "official": [
+     0.44,
+     0.014,
+     1.32
+    ],
+    "tcSG": [
+     0.44,
+     0.014,
+     1.32
+    ],
+    "tcGZ": [
+     0.44,
+     0.014,
+     1.32
+    ],
+    "tcINTL": [
+     0.44,
+     0.014,
+     1.32
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m093",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Flash-Vision-Exp",
+   "variant": "原廠直供",
+   "cond": "空閒時段",
+   "peak": "off",
+   "note": "",
+   "p": {
+    "official": [
+     0.22,
+     0.007,
+     0.66
+    ],
+    "tcSG": [
+     0.22,
+     0.007,
+     0.66
+    ],
+    "tcGZ": [
+     0.22,
+     0.007,
+     0.66
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m094",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Flash-Vision-Exp",
+   "variant": "原廠直供",
+   "cond": "高峰時段",
+   "peak": "peak",
+   "note": "",
+   "p": {
+    "official": [
+     0.44,
+     0.014,
+     1.32
+    ],
+    "tcSG": [
+     0.44,
+     0.014,
+     1.32
+    ],
+    "tcGZ": [
+     0.44,
+     0.014,
+     1.32
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m095",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Pro",
+   "variant": "聚合",
+   "cond": "非原廠直供渠道",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     1.74,
+     0.145,
+     3.48
+    ],
+    "tcSG": [
+     1.74,
+     0.145,
+     3.48
+    ],
+    "tcGZ": [
+     1.74,
+     0.145,
+     3.48
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m096",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Flash",
+   "variant": "聚合",
+   "cond": "非原廠直供渠道",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.14,
+     0.028,
+     0.28
+    ],
+    "tcSG": [
+     0.14,
+     0.028,
+     0.28
+    ],
+    "tcGZ": [
+     0.14,
+     0.028,
+     0.28
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m097",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Pro",
+   "variant": "8.18 前價",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.462,
+     0.004,
+     0.923
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.462,
+     0.004,
+     0.923
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m098",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V4-Flash",
+   "variant": "8.18 前價",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.154,
+     0.003,
+     0.308
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.154,
+     0.003,
+     0.308
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m099",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "deepseek",
+   "model": "DeepSeek-V3.2",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "新加坡區貴 2 倍，注意選區",
+   "p": {
+    "official": [
+     0.28,
+     0.056,
+     0.42
+    ],
+    "tcSG": [
+     0.57,
+     0.114,
+     1.71
+    ],
+    "tcGZ": [
+     0.28,
+     0.056,
+     0.42
+    ],
+    "tcINTL": [
+     0.28,
+     0.028,
+     0.42
+    ]
+   },
+   "officialBase": "tencent-gz",
+   "id": "m100",
+   "vendorLabel": "DeepSeek",
+   "yzFactor": 0.7,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "minimax",
+   "model": "MiniMax-M3",
+   "variant": "",
+   "cond": "輸入 ≤512K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.3,
+     0.06,
+     1.2
+    ],
+    "tcSG": [
+     0.3,
+     0.06,
+     1.2
+    ],
+    "tcGZ": [
+     0.3,
+     0.06,
+     1.2
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m101",
+   "vendorLabel": "MiniMax",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "minimax",
+   "model": "MiniMax-M3",
+   "variant": "",
+   "cond": "輸入 >512K",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.6,
+     0.12,
+     2.4
+    ],
+    "tcSG": [
+     0.6,
+     0.12,
+     2.4
+    ],
+    "tcGZ": [
+     0.6,
+     0.12,
+     2.4
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m102",
+   "vendorLabel": "MiniMax",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "minimax",
+   "model": "MiniMax-M2.7",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.3,
+     0.06,
+     1.2
+    ],
+    "tcSG": [
+     0.3,
+     0.06,
+     1.2
+    ],
+    "tcGZ": [
+     0.3,
+     0.06,
+     1.2
+    ],
+    "tcINTL": [
+     0.3,
+     0.06,
+     1.2
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m103",
+   "vendorLabel": "MiniMax",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "minimax",
+   "model": "MiniMax-M2.5",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.3,
+     0.03,
+     1.2
+    ],
+    "tcSG": [
+     0.3,
+     0.03,
+     1.2
+    ],
+    "tcGZ": [
+     0.3,
+     0.03,
+     1.2
+    ],
+    "tcINTL": [
+     0.3,
+     0.03,
+     1.2
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m104",
+   "vendorLabel": "MiniMax",
+   "yzFactor": 0.85,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "tencent",
+   "model": "Hunyuan 4-preview",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.834,
+     0.042,
+     2.501
+    ],
+    "tcSG": [
+     0.834,
+     0.042,
+     2.501
+    ],
+    "tcGZ": [
+     0.834,
+     0.042,
+     2.501
+    ],
+    "tcINTL": [
+     0.834,
+     0.042,
+     2.501
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m105",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "tencent",
+   "model": "Hunyuan 3.0",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.132,
+     0.033,
+     0.528
+    ],
+    "tcSG": [
+     0.132,
+     0.033,
+     0.528
+    ],
+    "tcGZ": [
+     0.132,
+     0.033,
+     0.528
+    ],
+    "tcINTL": [
+     0.132,
+     0.033,
+     0.528
+    ]
+   },
+   "officialBase": "tencent-sg",
+   "id": "m106",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "tencent",
+   "model": "Hy-MT2-Pro",
+   "variant": "翻譯",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.074,
+     null,
+     0.295
+    ],
+    "tcSG": [
+     0.074,
+     null,
+     0.295
+    ],
+    "tcGZ": [
+     0.074,
+     null,
+     0.295
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m107",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "tencent",
+   "model": "Hy-MT2-Plus",
+   "variant": "翻譯",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.074,
+     null,
+     0.295
+    ],
+    "tcSG": [
+     0.074,
+     null,
+     0.295
+    ],
+    "tcGZ": [
+     0.074,
+     null,
+     0.295
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m108",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": true
+  },
+  {
+   "kind": "t2t",
+   "vendor": "tencent",
+   "model": "Hy-MT2-Lite",
+   "variant": "翻譯",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.044,
+     null,
+     0.177
+    ],
+    "tcSG": [
+     0.044,
+     null,
+     0.177
+    ],
+    "tcGZ": [
+     0.044,
+     null,
+     0.177
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m109",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "tencent",
+   "model": "MiMo-V2.5-Pro",
+   "variant": "小米",
+   "cond": "",
+   "peak": null,
+   "note": "",
+   "p": {
+    "official": [
+     0.435,
+     0.0036,
+     0.87
+    ],
+    "tcSG": [
+     0.435,
+     0.0036,
+     0.87
+    ],
+    "tcGZ": [
+     0.41,
+     0.003,
+     0.819
+    ],
+    "tcINTL": null
+   },
+   "officialBase": "tencent-sg",
+   "id": "m110",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step evolving",
+   "variant": "",
+   "cond": "輸入長度 [0,1024]",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     1.0,
+     0.2,
+     5.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.0,
+     0.2,
+     5.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m111",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step 2.1-pro",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     1.0,
+     0.2,
+     5.0
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     1.0,
+     0.2,
+     5.0
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m112",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step 2.1-turbo",
+   "variant": "",
+   "cond": "",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.5,
+     0.1,
+     2.5
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.5,
+     0.1,
+     2.5
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m113",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step character",
+   "variant": "",
+   "cond": "輸入長度 [0,32]",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.123,
+     0.025,
+     0.308
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.123,
+     0.025,
+     0.308
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m114",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step character",
+   "variant": "",
+   "cond": "輸入長度 (32,128]",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.185,
+     0.025,
+     0.923
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.185,
+     0.025,
+     0.923
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m115",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step 2.0-mini",
+   "variant": "",
+   "cond": "輸入 [0,32]・非音訊",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.1,
+     0.02,
+     0.4
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.1,
+     0.02,
+     0.4
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m116",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step 2.0-mini",
+   "variant": "",
+   "cond": "輸入 (32,128]・非音訊",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.1,
+     0.02,
+     0.4
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.1,
+     0.02,
+     0.4
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m117",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2t",
+   "vendor": "stepfun",
+   "model": "Step 2.0-mini",
+   "variant": "",
+   "cond": "輸入 (128,256]・非音訊",
+   "peak": null,
+   "note": "悅智報價單無此廠",
+   "p": {
+    "official": [
+     0.2,
+     0.04,
+     0.8
+    ],
+    "tcSG": null,
+    "tcGZ": null,
+    "tcINTL": [
+     0.2,
+     0.04,
+     0.8
+    ]
+   },
+   "officialBase": "tencent-intl",
+   "id": "m118",
+   "vendorLabel": "階躍星辰",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "google",
+   "model": "Gemini 3 Pro Image (Nano Banana Pro)",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊叫 GG 3.0",
+   "p": {
+    "official": {
+     "1K": 0.134,
+     "2K": 0.134,
+     "4K": 0.24
+    },
+    "tcINTL": {
+     "1K": 0.135,
+     "2K": 0.135,
+     "4K": 0.24
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m119",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "google",
+   "model": "Gemini 3.1 Flash Image (Nano Banana 2)",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊叫 GG 3.1",
+   "p": {
+    "official": {
+     "512": 0.045,
+     "1K": 0.067,
+     "2K": 0.101,
+     "4K": 0.151
+    },
+    "tcINTL": {
+     "512": 0.045,
+     "1K": 0.067,
+     "2K": 0.101,
+     "4K": 0.151
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m120",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "google",
+   "model": "Gemini 3.1 Flash Lite Image (Nano Banana 2 Lite)",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊叫 GG 3.1-lite；2K/4K 為騰訊超分直出價",
+   "p": {
+    "official": {
+     "1K": 0.0336
+    },
+    "tcINTL": {
+     "1K": 0.0336,
+     "2K": 0.0403,
+     "4K": 0.0484
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m121",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "google",
+   "model": "Gemini 2.5 Flash Image (Nano Banana)",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊叫 GG 2.5；2K/4K 暫按 1K 收取",
+   "p": {
+    "official": {
+     "1K": 0.039
+    },
+    "tcINTL": {
+     "1K": 0.039,
+     "2K": 0.051,
+     "4K": 0.063
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m122",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "openai",
+   "model": "GPT image-2 (low)",
+   "variant": "",
+   "cond": "2026-05-12 起新價",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.006,
+     "2K": 0.012,
+     "4K": 0.02
+    },
+    "tcINTL": {
+     "1K": 0.006,
+     "2K": 0.012,
+     "4K": 0.02
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m123",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "openai",
+   "model": "GPT image-2 (medium)",
+   "variant": "",
+   "cond": "2026-05-12 起新價",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.053,
+     "2K": 0.107,
+     "4K": 0.178
+    },
+    "tcINTL": {
+     "1K": 0.053,
+     "2K": 0.107,
+     "4K": 0.178
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m124",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "openai",
+   "model": "GPT image-2 (high)",
+   "variant": "",
+   "cond": "2026-05-12 起新價",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.211,
+     "2K": 0.428,
+     "4K": 0.712
+    },
+    "tcINTL": {
+     "1K": 0.211,
+     "2K": 0.428,
+     "4K": 0.712
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m125",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "seedream",
+   "model": "Seedream 5.0-pro",
+   "variant": "",
+   "cond": "輸出圖；首張輸入圖免費，第 2 張起 $0.003；騰訊混元平台按像素分檔（≤261萬 / >261萬）",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.045,
+     "2K": 0.09,
+     "4K": 0.108
+    },
+    "tcINTL": {
+     "1K": 0.045,
+     "2K": 0.09,
+     "4K": 0.108
+    },
+    "tcLLM": {
+     "1K": 0.045,
+     "2K": 0.045,
+     "4K": 0.09
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m126",
+   "vendorLabel": "字節 Seedream",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "seedream",
+   "model": "Seedream 5.0-lite",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0339,
+     "2K": 0.0339,
+     "4K": 0.0339
+    },
+    "tcINTL": {
+     "1K": 0.0339,
+     "2K": 0.0339,
+     "4K": 0.0339
+    },
+    "tcLLM": {
+     "1K": 0.035,
+     "2K": 0.035,
+     "4K": 0.035
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m127",
+   "vendorLabel": "字節 Seedream",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "seedream",
+   "model": "Seedream 4.5",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0385,
+     "2K": 0.0385,
+     "4K": 0.0385
+    },
+    "tcINTL": {
+     "1K": 0.0385,
+     "2K": 0.0385,
+     "4K": 0.0385
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m128",
+   "vendorLabel": "字節 Seedream",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "seedream",
+   "model": "Seedream 4.0",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0308,
+     "2K": 0.0308,
+     "4K": 0.0308
+    },
+    "tcINTL": {
+     "1K": 0.0308,
+     "2K": 0.0308,
+     "4K": 0.0308
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m129",
+   "vendorLabel": "字節 Seedream",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling 3.0",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcINTL": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m130",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling 3.0-omni",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcINTL": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m131",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling O1",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcINTL": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m132",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling 2.1 文生圖",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.014,
+     "2K": 0.014,
+     "4K": 0.037
+    },
+    "tcINTL": {
+     "1K": 0.014,
+     "2K": 0.014,
+     "4K": 0.037
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m133",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling 2.1 單圖生圖",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcINTL": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.056
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m134",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling 2.1 多圖參考生圖",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.056,
+     "2K": 0.068,
+     "4K": 0.079
+    },
+    "tcINTL": {
+     "1K": 0.056,
+     "2K": 0.068,
+     "4K": 0.079
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m135",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "kling",
+   "model": "Kling expand 擴圖",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.028
+    },
+    "tcINTL": {
+     "1K": 0.028,
+     "2K": 0.028,
+     "4K": 0.028
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m136",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "vidu",
+   "model": "Vidu q2 文生圖",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0288,
+     "2K": 0.0385,
+     "4K": 0.0481
+    },
+    "tcINTL": {
+     "1K": 0.0288,
+     "2K": 0.0385,
+     "4K": 0.0481
+    },
+    "tcLLM": {
+     "1K": 0.03,
+     "2K": 0.04,
+     "4K": 0.05
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m137",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "vidu",
+   "model": "Vidu q2 參考生圖 1-3 張",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0385,
+     "2K": 0.0577,
+     "4K": 0.0769
+    },
+    "tcINTL": {
+     "1K": 0.0385,
+     "2K": 0.0577,
+     "4K": 0.0769
+    },
+    "tcLLM": {
+     "1K": 0.04,
+     "2K": 0.06,
+     "4K": 0.1
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m138",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "vidu",
+   "model": "Vidu q2 參考生圖 4-7 張",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0481,
+     "2K": 0.0962,
+     "4K": 0.1442
+    },
+    "tcINTL": {
+     "1K": 0.0481,
+     "2K": 0.0962,
+     "4K": 0.1442
+    },
+    "tcLLM": {
+     "1K": 0.05,
+     "2K": 0.08,
+     "4K": 0.15
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m139",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "tencent",
+   "model": "Hunyuan Image 3.0",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊 VOD 國際站未上架，只有國內站 0.2-0.36 元/張",
+   "p": {
+    "official": {
+     "1K": 0.032,
+     "2K": 0.032,
+     "4K": 0.032
+    },
+    "tcINTL": null,
+    "tcLLM": {
+     "1K": 0.032,
+     "2K": 0.032,
+     "4K": 0.032
+    }
+   },
+   "officialBase": "tencent-llm",
+   "id": "m140",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "qwen",
+   "model": "Qwen Image 0925",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0462,
+     "2K": 0.0585,
+     "4K": 0.0708
+    },
+    "tcINTL": {
+     "1K": 0.0462,
+     "2K": 0.0585,
+     "4K": 0.0708
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m141",
+   "vendorLabel": "阿里千問",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "bytedance",
+   "model": "即夢 JI 4.0",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0339,
+     "2K": 0.0339,
+     "4K": 0.0339
+    },
+    "tcINTL": {
+     "1K": 0.0339,
+     "2K": 0.0339,
+     "4K": 0.0339
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m142",
+   "vendorLabel": "字節",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "midjourney",
+   "model": "Midjourney v8.2",
+   "variant": "",
+   "cond": "",
+   "note": "預設出 4 張圖",
+   "p": {
+    "official": {
+     "1K": 0.039,
+     "2K": 0.051,
+     "4K": 0.063
+    },
+    "tcINTL": {
+     "1K": 0.039,
+     "2K": 0.051,
+     "4K": 0.063
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m143",
+   "vendorLabel": "Midjourney",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "midjourney",
+   "model": "Midjourney v7",
+   "variant": "",
+   "cond": "",
+   "note": "預設出 4 張圖",
+   "p": {
+    "official": {
+     "1K": 0.039,
+     "2K": 0.051,
+     "4K": 0.063
+    },
+    "tcINTL": {
+     "1K": 0.039,
+     "2K": 0.051,
+     "4K": 0.063
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m144",
+   "vendorLabel": "Midjourney",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "other",
+   "model": "Vega 1.0-lite",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0259,
+     "2K": 0.0288,
+     "4K": 0.036
+    },
+    "tcINTL": {
+     "1K": 0.0259,
+     "2K": 0.0288,
+     "4K": 0.036
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m145",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "other",
+   "model": "Vega 1.0-flash",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0603,
+     "2K": 0.0909,
+     "4K": 0.1359
+    },
+    "tcINTL": {
+     "1K": 0.0603,
+     "2K": 0.0909,
+     "4K": 0.1359
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m146",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "other",
+   "model": "Vega 1.0-pro",
+   "variant": "",
+   "cond": "",
+   "note": "前 3 張輸入圖免費，第 4 張起 $0.0154",
+   "p": {
+    "official": {
+     "1K": 0.1282,
+     "2K": 0.1282,
+     "4K": 0.228
+    },
+    "tcINTL": {
+     "1K": 0.1282,
+     "2K": 0.1282,
+     "4K": 0.228
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m147",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2i",
+   "vendor": "other",
+   "model": "Mingmou 1.0",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1K": 0.0462,
+     "2K": 0.0585,
+     "4K": 0.0708
+    },
+    "tcINTL": {
+     "1K": 0.0462,
+     "2K": 0.0585,
+     "4K": 0.0708
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m148",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "google",
+   "model": "Veo 3.1 標準（有聲）",
+   "variant": "",
+   "cond": "有聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.4,
+     "1080P": 0.4,
+     "4K": 0.6
+    },
+    "tcINTL": {
+     "720P/768P": 0.4,
+     "1080P": 0.5,
+     "2K": 0.5,
+     "4K": 0.6
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m149",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "google",
+   "model": "Veo 3.1 標準（無聲）",
+   "variant": "",
+   "cond": "無聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.2,
+     "1080P": 0.3,
+     "4K": 0.4
+    },
+    "tcINTL": {
+     "720P/768P": 0.2,
+     "1080P": 0.3,
+     "2K": 0.3,
+     "4K": 0.4
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m150",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "google",
+   "model": "Veo 3.1 Fast（有聲）",
+   "variant": "",
+   "cond": "有聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.1,
+     "1080P": 0.12,
+     "4K": 0.3
+    },
+    "tcINTL": {
+     "720P/768P": 0.15,
+     "1080P": 0.25,
+     "2K": 0.25,
+     "4K": 0.35
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m151",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "google",
+   "model": "Veo 3.1 Fast（無聲）",
+   "variant": "",
+   "cond": "無聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.1,
+     "1080P": 0.2,
+     "4K": 0.3
+    },
+    "tcINTL": {
+     "720P/768P": 0.1,
+     "1080P": 0.2,
+     "2K": 0.2,
+     "4K": 0.3
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m152",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "google",
+   "model": "Veo 3.1 Lite（有聲）",
+   "variant": "",
+   "cond": "有聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.05,
+     "1080P": 0.08
+    },
+    "tcINTL": {
+     "720P/768P": 0.08,
+     "1080P": 0.12,
+     "2K": 0.15
+    },
+    "tcLLM": null
+   },
+   "officialBase": "google-doc",
+   "id": "m153",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "google",
+   "model": "Veo 3.1 Lite（無聲）",
+   "variant": "",
+   "cond": "無聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.05,
+     "1080P": 0.08
+    },
+    "tcINTL": {
+     "720P/768P": 0.05,
+     "1080P": 0.08,
+     "2K": 0.1
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m154",
+   "vendorLabel": "Google",
+   "yzFactor": 0.75,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "openai",
+   "model": "Sora 2.0 (OS)",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.1,
+     "1080P": 0.15,
+     "2K": 0.225,
+     "4K": 0.34
+    },
+    "tcINTL": {
+     "720P/768P": 0.1,
+     "1080P": 0.15,
+     "2K": 0.225,
+     "4K": 0.34
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m155",
+   "vendorLabel": "OpenAI",
+   "yzFactor": 0.8,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 3.0-turbo",
+   "variant": "",
+   "cond": "有聲",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.112,
+     "1080P": 0.14,
+     "2K": 0.168,
+     "4K": 0.2016
+    },
+    "tcINTL": {
+     "720P/768P": 0.112,
+     "1080P": 0.14,
+     "2K": 0.168,
+     "4K": 0.2016
+    },
+    "tcLLM": {
+     "720P/768P": 0.112,
+     "1080P": 0.14
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m156",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 3.0-Omni 無參考影片・無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "2K": 0.14,
+     "4K": 0.42
+    },
+    "tcINTL": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "2K": 0.14,
+     "4K": 0.42
+    },
+    "tcLLM": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "4K": 0.42
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m157",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 3.0-Omni 無參考影片・有聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.112,
+     "1080P": 0.14,
+     "2K": 0.168,
+     "4K": 0.42
+    },
+    "tcINTL": {
+     "720P/768P": 0.112,
+     "1080P": 0.14,
+     "2K": 0.168,
+     "4K": 0.42
+    },
+    "tcLLM": {
+     "720P/768P": 0.112,
+     "1080P": 0.14,
+     "4K": 0.42
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m158",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 3.0-Omni 有參考影片・無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "2K": 0.21,
+     "4K": 0.28
+    },
+    "tcINTL": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "2K": 0.21,
+     "4K": 0.28
+    },
+    "tcLLM": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "4K": 0.42
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m159",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 3.0 無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "2K": 0.14,
+     "4K": 0.42
+    },
+    "tcINTL": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "2K": 0.14,
+     "4K": 0.42
+    },
+    "tcLLM": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "4K": 0.42
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m160",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 3.0 有聲・未指定音色",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "2K": 0.21,
+     "4K": 0.42
+    },
+    "tcINTL": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "2K": 0.21,
+     "4K": 0.42
+    },
+    "tcLLM": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "4K": 0.42
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m161",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling O1 無參考影片",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "2K": 0.168,
+     "4K": 0.252
+    },
+    "tcINTL": {
+     "720P/768P": 0.084,
+     "1080P": 0.112,
+     "2K": 0.168,
+     "4K": 0.252
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m162",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling O1 有參考影片",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "2K": 0.252,
+     "4K": 0.378
+    },
+    "tcINTL": {
+     "720P/768P": 0.126,
+     "1080P": 0.168,
+     "2K": 0.252,
+     "4K": 0.378
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m163",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 2.6 無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.042,
+     "1080P": 0.07,
+     "2K": 0.105,
+     "4K": 0.1568
+    },
+    "tcINTL": {
+     "720P/768P": 0.042,
+     "1080P": 0.07,
+     "2K": 0.105,
+     "4K": 0.1568
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m164",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 2.6 有聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1080P": 0.14,
+     "2K": 0.21,
+     "4K": 0.315
+    },
+    "tcINTL": {
+     "1080P": 0.14,
+     "2K": 0.21,
+     "4K": 0.315
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m165",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 2.5-turbo",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.042,
+     "1080P": 0.07,
+     "2K": 0.105,
+     "4K": 0.157
+    },
+    "tcINTL": {
+     "720P/768P": 0.042,
+     "1080P": 0.07,
+     "2K": 0.105,
+     "4K": 0.157
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m166",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "kling",
+   "model": "Kling 1.6 / 2.0 / 2.1",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.056,
+     "1080P": 0.098,
+     "2K": 0.14,
+     "4K": 0.21
+    },
+    "tcINTL": {
+     "720P/768P": 0.056,
+     "1080P": 0.098,
+     "2K": 0.14,
+     "4K": 0.21
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m167",
+   "vendorLabel": "快手可靈",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "hailuo",
+   "model": "Hailuo H3 輸出影片",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊混元平台以 768P/2K 計",
+   "p": {
+    "official": {
+     "720P/768P": 0.08,
+     "1080P": 0.1,
+     "2K": 0.13,
+     "4K": 0.156
+    },
+    "tcINTL": {
+     "720P/768P": 0.08,
+     "1080P": 0.1,
+     "2K": 0.13,
+     "4K": 0.156
+    },
+    "tcLLM": {
+     "720P/768P": 0.08,
+     "2K": 0.13
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m168",
+   "vendorLabel": "MiniMax 海螺",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "hailuo",
+   "model": "Hailuo H3-Max",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.08,
+     "1080P": 0.1,
+     "2K": 0.12,
+     "4K": 0.144
+    },
+    "tcINTL": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.08,
+     "1080P": 0.1,
+     "2K": 0.12,
+     "4K": 0.144
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m169",
+   "vendorLabel": "MiniMax 海螺",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "hailuo",
+   "model": "Hailuo 02 / 2.3",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0508,
+     "1080P": 0.0892,
+     "2K": 0.1431,
+     "4K": 0.2292
+    },
+    "tcINTL": {
+     "720P/768P": 0.0508,
+     "1080P": 0.0892,
+     "2K": 0.1431,
+     "4K": 0.2292
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m170",
+   "vendorLabel": "MiniMax 海螺",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "hailuo",
+   "model": "Hailuo 2.3-fast",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0346,
+     "1080P": 0.0592,
+     "2K": 0.0892,
+     "4K": 0.1338
+    },
+    "tcINTL": {
+     "720P/768P": 0.0346,
+     "1080P": 0.0592,
+     "2K": 0.0892,
+     "4K": 0.1338
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m171",
+   "vendorLabel": "MiniMax 海螺",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3 參考生",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.1,
+     "1080P": 0.125,
+     "2K": 0.15,
+     "4K": 0.18
+    },
+    "tcINTL": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.1,
+     "1080P": 0.125,
+     "2K": 0.15,
+     "4K": 0.18
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m172",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3 參考生＋錯峰",
+   "variant": "",
+   "cond": "錯峰模式，價格減半",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.025,
+     "720P/768P": 0.05,
+     "1080P": 0.063,
+     "2K": 0.075,
+     "4K": 0.09
+    },
+    "tcINTL": {
+     "480P/540P": 0.025,
+     "720P/768P": 0.05,
+     "1080P": 0.063,
+     "2K": 0.075,
+     "4K": 0.09
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m173",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3-pro 圖生/文生/首尾幀",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.125,
+     "1080P": 0.15,
+     "2K": 0.18,
+     "4K": 0.216
+    },
+    "tcINTL": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.125,
+     "1080P": 0.15,
+     "2K": 0.18,
+     "4K": 0.216
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m174",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3-turbo 圖生/文生/首尾幀",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.04,
+     "720P/768P": 0.06,
+     "1080P": 0.07,
+     "2K": 0.084,
+     "4K": 0.1008
+    },
+    "tcINTL": {
+     "480P/540P": 0.04,
+     "720P/768P": 0.06,
+     "1080P": 0.07,
+     "2K": 0.084,
+     "4K": 0.1008
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m175",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3-turbo ＋錯峰",
+   "variant": "",
+   "cond": "錯峰模式",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.02,
+     "720P/768P": 0.03,
+     "1080P": 0.035,
+     "2K": 0.042,
+     "4K": 0.0504
+    },
+    "tcINTL": {
+     "480P/540P": 0.02,
+     "720P/768P": 0.03,
+     "1080P": 0.035,
+     "2K": 0.042,
+     "4K": 0.0504
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m176",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3-drama 參考生",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1080P": 0.14,
+     "2K": 0.168,
+     "4K": 0.2015
+    },
+    "tcINTL": {
+     "1080P": 0.14,
+     "2K": 0.168,
+     "4K": 0.2015
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m177",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q3-mix 參考生",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.125,
+     "1080P": 0.15,
+     "2K": 0.18,
+     "4K": 0.216
+    },
+    "tcINTL": {
+     "720P/768P": 0.125,
+     "1080P": 0.15,
+     "2K": 0.18,
+     "4K": 0.216
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m178",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q2 文生",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0492,
+     "1080P": 0.0723,
+     "2K": 0.1077,
+     "4K": 0.1615
+    },
+    "tcINTL": {
+     "720P/768P": 0.0492,
+     "1080P": 0.0723,
+     "2K": 0.1077,
+     "4K": 0.1615
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m179",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q2 文生＋錯峰",
+   "variant": "",
+   "cond": "錯峰模式",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0246,
+     "1080P": 0.0362,
+     "2K": 0.0538,
+     "4K": 0.0808
+    },
+    "tcINTL": {
+     "720P/768P": 0.0246,
+     "1080P": 0.0362,
+     "2K": 0.0538,
+     "4K": 0.0808
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m180",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q2-pro 圖生/首尾幀",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0538,
+     "1080P": 0.1077,
+     "2K": 0.1538,
+     "4K": 0.2308
+    },
+    "tcINTL": {
+     "720P/768P": 0.0538,
+     "1080P": 0.1077,
+     "2K": 0.1538,
+     "4K": 0.2308
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m181",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "vidu",
+   "model": "Vidu q2-turbo 圖生/首尾幀",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0385,
+     "1080P": 0.0723,
+     "2K": 0.1077,
+     "4K": 0.1615
+    },
+    "tcINTL": {
+     "720P/768P": 0.0385,
+     "1080P": 0.0723,
+     "2K": 0.1077,
+     "4K": 0.1615
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m182",
+   "vendorLabel": "生數 Vidu",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "pixverse",
+   "model": "PixVerse V6.0 無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0311,
+     "720P/768P": 0.04,
+     "1080P": 0.08,
+     "2K": 0.096,
+     "4K": 0.1152
+    },
+    "tcINTL": {
+     "480P/540P": 0.0311,
+     "720P/768P": 0.04,
+     "1080P": 0.08,
+     "2K": 0.096,
+     "4K": 0.1152
+    },
+    "tcLLM": {
+     "480P/540P": 0.03111,
+     "720P/768P": 0.04,
+     "1080P": 0.08
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m183",
+   "vendorLabel": "愛詩 PixVerse",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "pixverse",
+   "model": "PixVerse V6.0 有聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.04,
+     "720P/768P": 0.0533,
+     "1080P": 0.1022,
+     "2K": 0.1227,
+     "4K": 0.1472
+    },
+    "tcINTL": {
+     "480P/540P": 0.04,
+     "720P/768P": 0.0533,
+     "1080P": 0.1022,
+     "2K": 0.1227,
+     "4K": 0.1472
+    },
+    "tcLLM": {
+     "480P/540P": 0.04,
+     "720P/768P": 0.05333,
+     "1080P": 0.10222
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m184",
+   "vendorLabel": "愛詩 PixVerse",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "pixverse",
+   "model": "PixVerse C1 無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0356,
+     "720P/768P": 0.0444,
+     "1080P": 0.0844,
+     "2K": 0.1013,
+     "4K": 0.1216
+    },
+    "tcINTL": {
+     "480P/540P": 0.0356,
+     "720P/768P": 0.0444,
+     "1080P": 0.0844,
+     "2K": 0.1013,
+     "4K": 0.1216
+    },
+    "tcLLM": {
+     "480P/540P": 0.03556,
+     "720P/768P": 0.04444,
+     "1080P": 0.08444
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m185",
+   "vendorLabel": "愛詩 PixVerse",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "pixverse",
+   "model": "PixVerse C1 有聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0444,
+     "720P/768P": 0.0578,
+     "1080P": 0.1067,
+     "2K": 0.128,
+     "4K": 0.1536
+    },
+    "tcINTL": {
+     "480P/540P": 0.0444,
+     "720P/768P": 0.0578,
+     "1080P": 0.1067,
+     "2K": 0.128,
+     "4K": 0.1536
+    },
+    "tcLLM": {
+     "480P/540P": 0.04444,
+     "720P/768P": 0.05778,
+     "1080P": 0.10667
+    }
+   },
+   "officialBase": "tencent-intl",
+   "id": "m186",
+   "vendorLabel": "愛詩 PixVerse",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "pixverse",
+   "model": "PixVerse V5.6 無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0392,
+     "720P/768P": 0.0504,
+     "1080P": 0.084,
+     "2K": 0.1176,
+     "4K": 0.1646
+    },
+    "tcINTL": {
+     "480P/540P": 0.0392,
+     "720P/768P": 0.0504,
+     "1080P": 0.084,
+     "2K": 0.1176,
+     "4K": 0.1646
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m187",
+   "vendorLabel": "愛詩 PixVerse",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "seedance",
+   "model": "Seedance 1.5-pro 無聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0123,
+     "720P/768P": 0.0265,
+     "1080P": 0.0597,
+     "2K": 0.1063,
+     "4K": 0.2388
+    },
+    "tcINTL": {
+     "480P/540P": 0.0123,
+     "720P/768P": 0.0265,
+     "1080P": 0.0597,
+     "2K": 0.1063,
+     "4K": 0.2388
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m188",
+   "vendorLabel": "字節 Seedance",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "seedance",
+   "model": "Seedance 1.5-pro 有聲",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0246,
+     "720P/768P": 0.0532,
+     "1080P": 0.1197,
+     "2K": 0.2126,
+     "4K": 0.4785
+    },
+    "tcINTL": {
+     "480P/540P": 0.0246,
+     "720P/768P": 0.0532,
+     "1080P": 0.1197,
+     "2K": 0.2126,
+     "4K": 0.4785
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m189",
+   "vendorLabel": "字節 Seedance",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "seedance",
+   "model": "Seedance 1.0-pro",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0225,
+     "720P/768P": 0.0474,
+     "1080P": 0.1129,
+     "2K": 0.1694,
+     "4K": 0.2541
+    },
+    "tcINTL": {
+     "480P/540P": 0.0225,
+     "720P/768P": 0.0474,
+     "1080P": 0.1129,
+     "2K": 0.1694,
+     "4K": 0.2541
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m190",
+   "vendorLabel": "字節 Seedance",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "seedance",
+   "model": "Seedance 1.0-pro-fast",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.0062,
+     "720P/768P": 0.0132,
+     "1080P": 0.0317,
+     "2K": 0.0475,
+     "4K": 0.0713
+    },
+    "tcINTL": {
+     "480P/540P": 0.0062,
+     "720P/768P": 0.0132,
+     "1080P": 0.0317,
+     "2K": 0.0475,
+     "4K": 0.0713
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m191",
+   "vendorLabel": "字節 Seedance",
+   "yzFactor": 0.95,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "bytedance",
+   "model": "即夢 JV 3.0-pro",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "1080P": 0.1538,
+     "2K": 0.2308,
+     "4K": 0.3462
+    },
+    "tcINTL": {
+     "1080P": 0.1538,
+     "2K": 0.2308,
+     "4K": 0.3462
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m192",
+   "vendorLabel": "字節",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "alibaba",
+   "model": "Wan 3.0",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.1,
+     "1080P": 0.2,
+     "2K": 0.24,
+     "4K": 0.288
+    },
+    "tcINTL": {
+     "480P/540P": 0.05,
+     "720P/768P": 0.1,
+     "1080P": 0.2,
+     "2K": 0.24,
+     "4K": 0.288
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m193",
+   "vendorLabel": "阿里",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "alibaba",
+   "model": "Wan 3.0-prime",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "480P/540P": 0.068,
+     "720P/768P": 0.14,
+     "1080P": 0.28,
+     "2K": 0.336,
+     "4K": 0.4032
+    },
+    "tcINTL": {
+     "480P/540P": 0.068,
+     "720P/768P": 0.14,
+     "1080P": 0.28,
+     "2K": 0.336,
+     "4K": 0.4032
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m194",
+   "vendorLabel": "阿里",
+   "yzFactor": 0.7,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "tencent",
+   "model": "Hunyuan Video 1.5",
+   "variant": "",
+   "cond": "",
+   "note": "騰訊 VOD 國際站未上架（只有國內站 0.3-1.12 元/秒）",
+   "p": {
+    "official": {
+     "720P/768P": 0.048
+    },
+    "tcINTL": null,
+    "tcLLM": {
+     "720P/768P": 0.048
+    }
+   },
+   "officialBase": "tencent-llm",
+   "id": "m195",
+   "vendorLabel": "騰訊混元",
+   "yzFactor": 0.65,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "other",
+   "model": "Vega 1.0-lite 輸出影片",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0577,
+     "1080P": 0.0769,
+     "2K": 0.0962,
+     "4K": 0.1154
+    },
+    "tcINTL": {
+     "720P/768P": 0.0577,
+     "1080P": 0.0769,
+     "2K": 0.0962,
+     "4K": 0.1154
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m196",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "other",
+   "model": "Vega 1.0-pro 無參考影片",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.1223,
+     "1080P": 0.2662,
+     "2K": 0.6615,
+     "4K": 0.7538
+    },
+    "tcINTL": {
+     "720P/768P": 0.1223,
+     "1080P": 0.2662,
+     "2K": 0.6615,
+     "4K": 0.7538
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m197",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "other",
+   "model": "Mingmou 1.0",
+   "variant": "",
+   "cond": "",
+   "note": "",
+   "p": {
+    "official": {
+     "720P/768P": 0.0462,
+     "1080P": 0.0769,
+     "2K": 0.1154,
+     "4K": 0.1723
+    },
+    "tcINTL": {
+     "720P/768P": 0.0462,
+     "1080P": 0.0769,
+     "2K": 0.1154,
+     "4K": 0.1723
+    },
+    "tcLLM": null
+   },
+   "officialBase": "tencent-intl",
+   "id": "m198",
+   "vendorLabel": "其他",
+   "yzFactor": null,
+   "yzListed": false
+  },
+  {
+   "kind": "t2v",
+   "vendor": "minimax",
+   "model": "MiniMax-Video-H3",
+   "variant": "",
+   "cond": "768P / 2K；輸入影片同價",
+   "note": "騰訊混元平台報價",
+   "p": {
+    "official": {
+     "720P/768P": 0.08,
+     "2K": 0.13
+    },
+    "tcINTL": null,
+    "tcLLM": {
+     "720P/768P": 0.08,
+     "2K": 0.13
+    }
+   },
+   "officialBase": "tencent-llm",
+   "id": "m199",
+   "vendorLabel": "MiniMax",
+   "yzFactor": 0.85,
+   "yzListed": false
+  }
+ ]
+}</script>
+<script>
+(function(){
+"use strict";
+var DATA = JSON.parse(document.getElementById('payload').textContent);
+var ROWS = DATA.rows;
+
+/* ---------- provider column definitions ---------- */
+var COLS = {
+  t2t:[
+    {k:'official',label:'原廠官方價',sub:'目錄價'},
+    {k:'yz',      label:'悅智 TokenHub',sub:'折扣價'},
+    {k:'cur',     label:'現用供應商',sub:'Gemini only'},
+    {k:'tcINTL',  label:'騰訊·國際站',sub:'VOD AIGC'},
+    {k:'tcSG',    label:'騰訊·新加坡',sub:'語言模型'},
+    {k:'tcGZ',    label:'騰訊·廣州',sub:'語言模型'}
+  ],
+  t2i:[
+    {k:'official',label:'原廠官方價',sub:'目錄價'},
+    {k:'yz',      label:'悅智 TokenHub',sub:'折扣價'},
+    {k:'cur',     label:'現用供應商',sub:'Gemini only'},
+    {k:'tcINTL',  label:'騰訊·國際站',sub:'VOD AIGC'},
+    {k:'tcLLM',   label:'騰訊·混元平台',sub:'視覺模型'}
+  ],
+  t2v:[
+    {k:'official',label:'原廠官方價',sub:'目錄價'},
+    {k:'yz',      label:'悅智 TokenHub',sub:'折扣價'},
+    {k:'cur',     label:'現用供應商',sub:'Gemini only'},
+    {k:'tcINTL',  label:'騰訊·國際站',sub:'VOD AIGC'},
+    {k:'tcLLM',   label:'騰訊·混元平台',sub:'視覺模型'}
+  ]
+};
+var UNIT = {t2t:'USD / 1M tokens', t2i:'USD / 張', t2v:'USD / 秒'};
+var RES_ORDER = ['512','480P/540P','1K','720P/768P','1080P','2K','4K'];
+
+var S = {
+  kind:'t2t', q:'', ratio:4, cache:0, res:null, sort:'best', peak:'all', multiOnly:false,
+  curDisc:95, vendors:{}, cols:{}
+};
+
+/* ---------- helpers ---------- */
+function fmt(v){
+  if(v===null||v===undefined) return null;
+  if(v>=100) return v.toFixed(0);
+  if(v>=10)  return v.toFixed(2);
+  if(v>=1)   return v.toFixed(3);
+  if(v>=0.01)return v.toFixed(4);
+  return v.toFixed(5);
+}
+function rowsOfKind(k){ return ROWS.filter(function(r){return r.kind===k;}); }
+
+/* price triple for a t2t provider cell -> {inP,cacheP,outP} */
+function tripleOf(r,key){
+  if(key==='yz'){
+    var b=r.p.official; if(!b||!r.yzFactor) return null;
+    return [b[0]===null?null:b[0]*r.yzFactor, b[1]===null?null:b[1]*r.yzFactor, b[2]===null?null:b[2]*r.yzFactor];
+  }
+  if(key==='cur'){
+    if(r.vendor!=='google') return null;
+    var g=r.p.official; if(!g) return null; var f=S.curDisc/100;
+    return [g[0]===null?null:g[0]*f, g[1]===null?null:g[1]*f, g[2]===null?null:g[2]*f];
+  }
+  return r.p[key]||null;
+}
+/* per-unit price for t2i/t2v provider cell at selected resolution */
+function unitOf(r,key){
+  var res=S.res;
+  function pick(m){
+    if(!m) return null;
+    if(res && m[res]!==undefined) return m[res];
+    if(res) return null;
+    return null;
+  }
+  if(key==='yz'){
+    var b=pick(r.p.official); if(b===null||!r.yzFactor) return null; return b*r.yzFactor;
+  }
+  if(key==='cur'){
+    if(r.vendor!=='google') return null;
+    var g=pick(r.p.official); if(g===null) return null; return g*(S.curDisc/100);
+  }
+  return pick(r.p[key]);
+}
+/* blended score used for ranking + the big number in the cell */
+function scoreOf(r,key){
+  if(r.kind==='t2t'){
+    var t=tripleOf(r,key); if(!t) return null;
+    var inP=t[0], outP=t[2], cP=t[1];
+    if(inP===null&&outP===null) return null;
+    var c=S.cache/100;
+    var eff = (inP===null)?null:(cP===null? inP : inP*(1-c)+cP*c);
+    if(outP===null) return eff;
+    if(eff===null) return outP;
+    var R=S.ratio;
+    return (R*eff+outP)/(R+1);
+  }
+  return unitOf(r,key);
+}
+
+/* ---------- filtering ---------- */
+function visibleCols(){ return COLS[S.kind].filter(function(c){return S.cols[S.kind][c.k];}); }
+function filtered(){
+  var q=S.q.trim().toLowerCase();
+  return rowsOfKind(S.kind).filter(function(r){
+    if(!S.vendors[r.vendor]) return false;
+    if(S.kind==='t2t'&&S.peak!=='all'&&r.peak&&r.peak!==S.peak) return false;
+    if(q){
+      var hay=(r.model+' '+r.variant+' '+r.cond+' '+r.vendorLabel+' '+r.note).toLowerCase();
+      if(hay.indexOf(q)<0) return false;
+    }
+    var quoted=visibleCols().filter(function(c){
+      return c.k!=='yz'&&c.k!=='cur'&&scoreOf(r,c.k)!==null;
+    }).length;
+    if(S.kind!=='t2t'){
+      var any=quoted>0||visibleCols().some(function(c){return scoreOf(r,c.k)!==null;});
+      if(!any) return false;
+    }
+    if(S.multiOnly&&quoted<2) return false;
+    return true;
+  });
+}
+function bestOf(r){
+  var best=null;
+  visibleCols().forEach(function(c){
+    var s=scoreOf(r,c.k); if(s===null) return;
+    if(best===null||s<best-1e-12) best=s;
+  });
+  return best;
+}
+
+/* ---------- render ---------- */
+function renderHead(){
+  var tr=document.getElementById('hrow');
+  tr.innerHTML='';
+  var th=document.createElement('th'); th.className='model';
+  th.innerHTML='型號 <small>'+UNIT[S.kind]+'</small>'; tr.appendChild(th);
+  visibleCols().forEach(function(c){
+    var t=document.createElement('th'); t.className='grp'; t.style.textAlign='right';
+    t.innerHTML=c.label+' <small>'+c.sub+'</small>'; tr.appendChild(t);
+  });
+  var d=document.createElement('th'); d.className='grp'; d.style.textAlign='right';
+  d.innerHTML='最平 vs 原廠 <small>省幾多</small>'; tr.appendChild(d);
+}
+
+var SRC_LABEL={'google-doc':'Google 官方','tencent-intl':'騰訊國際站','tencent-sg':'騰訊新加坡','tencent-gz':'騰訊廣州','tencent-llm':'騰訊混元平台'};
+
+function renderBody(){
+  var list=filtered();
+  list.forEach(function(r){ r._best=bestOf(r); });
+  var dir=1;
+  if(S.sort==='best'||S.sort==='bestDesc'){
+    dir=(S.sort==='best')?1:-1;
+    list.sort(function(a,b){
+      if(a._best===null) return 1; if(b._best===null) return -1;
+      return (a._best-b._best)*dir;
+    });
+  } else if(S.sort==='vendor'){
+    list.sort(function(a,b){ return a.vendorLabel.localeCompare(b.vendorLabel,'zh-Hant')||a.model.localeCompare(b.model); });
+  } else {
+    list.sort(function(a,b){ return a.model.localeCompare(b.model)||a.cond.localeCompare(b.cond); });
+  }
+
+  var tb=document.getElementById('tbody'); tb.innerHTML='';
+  var cols=visibleCols();
+  var frag=document.createDocumentFragment();
+
+  list.forEach(function(r){
+    var tr=document.createElement('tr');
+    var td=document.createElement('td'); td.className='model';
+    var meta=[];
+    if(r.variant) meta.push(r.variant);
+    if(r.cond) meta.push(r.cond);
+    var estBadge = (r.officialBase && r.officialBase!=='google-doc' && r.vendor!=='anthropic' && r.vendor!=='openai' && r.vendor!=='xai')
+      ? '<span class="badge est" title="基準價由騰訊報價推定，非原廠文件">推定</span>' : '';
+    var srcBadge = r.officialBase ? '<span class="badge" title="原廠基準價出處">'+(SRC_LABEL[r.officialBase]||r.officialBase)+'</span>' : '';
+    td.innerHTML =
+      '<div class="mName">'+r.model+estBadge+'</div>'+
+      '<div class="mMeta"><span class="vTag">'+r.vendorLabel+'</span>'+(meta.length?' · '+meta.join(' · '):'')+'</div>'+
+      (r.note?'<div class="mMeta" style="opacity:.8">'+r.note+'</div>':'')+
+      '<div class="mMeta">'+srcBadge+(r.yzFactor?'<span class="badge" title="'+(r.yzListed?'悅智報價單有明確列出呢隻型號':'報價單無列此型號，按同原廠折扣推算')+'">悅智 ×'+r.yzFactor+(r.yzListed?'':' 推算')+'</span>':'')+'</div>';
+    tr.appendChild(td);
+
+    cols.forEach(function(c){
+      var cell=document.createElement('td');
+      var s=scoreOf(r,c.k);
+      if(s===null){ cell.className='num blank'; cell.textContent='—'; tr.appendChild(cell); return; }
+      cell.className='num'+((r._best!==null&&Math.abs(s-r._best)<1e-12)?' best':'')+((c.k==='yz'||c.k==='cur')?' derived':'');
+      var detail='';
+      if(r.kind==='t2t'){
+        var t=tripleOf(r,c.k);
+        detail='<span class="pair">入 '+(t[0]===null?'—':fmt(t[0]))+' · 出 '+(t[2]===null?'—':fmt(t[2]))+(t[1]===null?'':' · 快取 '+fmt(t[1]))+'</span>';
+      }
+      cell.innerHTML='<span class="big">'+fmt(s)+'</span>'+
+        ((r._best!==null&&Math.abs(s-r._best)<1e-12)?'<span class="tick">最平</span>':'')+detail;
+      tr.appendChild(cell);
+    });
+
+    var dcell=document.createElement('td'); dcell.className='num';
+    var base=scoreOf(r,'official');
+    if(base!==null&&r._best!==null&&base>0){
+      var pct=(1-r._best/base)*100;
+      dcell.innerHTML='<span class="delta '+(pct>0.01?'dn':(pct<-0.01?'up':''))+'">'+
+        (pct>0.01?'−'+pct.toFixed(1)+'%':(pct<-0.01?'+'+Math.abs(pct).toFixed(1)+'%':'持平'))+'</span>';
+    } else { dcell.className='num blank'; dcell.textContent='—'; }
+    tr.appendChild(dcell);
+    frag.appendChild(tr);
+  });
+  tb.appendChild(frag);
+  document.getElementById('empty').hidden = list.length>0;
+  document.getElementById('tbl').hidden = list.length===0;
+  renderKpis(list);
+}
+
+function renderKpis(list){
+  var el=document.getElementById('kpis');
+  var withBase=list.filter(function(r){return scoreOf(r,'official')!==null&&r._best!==null;});
+  var savings=withBase.map(function(r){return 1-r._best/scoreOf(r,'official');}).filter(function(v){return isFinite(v);});
+  var avg=savings.length?savings.reduce(function(a,b){return a+b;},0)/savings.length*100:0;
+  var winner={};
+  list.forEach(function(r){
+    if(r._best===null) return;
+    visibleCols().forEach(function(c){
+      var s=scoreOf(r,c.k);
+      if(s!==null&&Math.abs(s-r._best)<1e-12) winner[c.k]=(winner[c.k]||0)+1;
+    });
+  });
+  var yzNone=list.filter(function(r){return !r.yzFactor;}).length;
+  var tcOnly=list.filter(function(r){
+    return r.p.official===null||r.p.official===undefined ? false :
+      (!r.yzFactor && (r.p.tcINTL||r.p.tcSG||r.p.tcGZ||r.p.tcLLM));
+  }).length;
+  var cheapest=list.filter(function(r){return r._best!==null;}).slice().sort(function(a,b){return a._best-b._best;})[0];
+
+  el.innerHTML=
+    kpi(list.length,'個報價點符合篩選')+
+    kpi(avg.toFixed(1)+'%','平均可省（最平 vs 原廠目錄價）',true)+
+    kpi(tcOnly||yzNone,'騰訊有貨、悅智冇報價')+
+    kpi(cheapest?fmt(cheapest._best):'—', cheapest?('最平：'+cheapest.model):'最平報價');
+  renderCallout(list);
+}
+function renderCallout(list){
+  var el=document.getElementById('callout');
+  var f=S.curDisc/100;
+  var gem=list.filter(function(r){return r.vendor==='google'&&r.yzFactor;});
+  if(gem.length){
+    var save=(1-r0(gem)/f)*100;
+    var c1=document.getElementById('fStat1'), c2=document.getElementById('fCur');
+    if(c1) c1.textContent=(save>=0?'\u2212':'+')+Math.abs(save).toFixed(1)+'%';
+    if(c2) c2.textContent=(f*100).toFixed(0)+'%';
+  }
+  var yzNone=list.filter(function(r){return !r.yzFactor;}).length;
+  el.innerHTML=
+    '<p><b>點睇個表：</b>大隻嗰個數係<b>綜合單價</b>（已經按上面個輸入輸出比例同快取命中率計埋），細字係入／出／快取原價。'+
+    '<span style="border-bottom:1px dashed var(--rule)">虛線底</span>嘅數字係<b>推算價</b>＝ 基準價 × 折扣，'+
+    '冇虛線嘅係報價表照抄。米黃色格 ＝ 嗰行最平。</p>'+
+    '<p><b>悅智梗係贏：</b>佢係喺原廠目錄價上面打折，唔係獨立開價，所以同一行一定最平 —— 要比嘅係佢<b>折扣率高唔高</b>，同埋佢<b>有冇報呢隻 model</b>'+
+    (yzNone?('（而家篩選之下有 <b>'+yzNone+'</b> 個報價點佢冇報）'):'')+'。</p>';
+}
+function r0(gem){ return gem[0].yzFactor; }
+function kpi(big,label,hl){
+  return '<div class="kpi'+(hl?' hl':'')+'"><b>'+big+'</b><span>'+label+'</span></div>';
+}
+
+/* ---------- controls wiring ---------- */
+function buildVendorChips(){
+  var box=document.getElementById('vendorChips'); box.innerHTML='';
+  var seen={}, order=[];
+  rowsOfKind(S.kind).forEach(function(r){ if(!seen[r.vendor]){seen[r.vendor]=1;order.push(r);} });
+  order.sort(function(a,b){return a.vendorLabel.localeCompare(b.vendorLabel,'zh-Hant');});
+  if(!S.vendorsInit) S.vendorsInit={};
+  order.forEach(function(r){ if(S.vendors[r.vendor]===undefined) S.vendors[r.vendor]=true; });
+  var all=document.createElement('button');
+  all.className='chip'; all.textContent='全選 / 全清';
+  all.addEventListener('click',function(){
+    var anyOff=order.some(function(r){return !S.vendors[r.vendor];});
+    order.forEach(function(r){S.vendors[r.vendor]=anyOff;});
+    buildVendorChips(); renderBody();
+  });
+  box.appendChild(all);
+  order.forEach(function(r){
+    var b=document.createElement('button');
+    b.className='chip'; b.textContent=r.vendorLabel;
+    b.setAttribute('aria-pressed', S.vendors[r.vendor]?'true':'false');
+    b.addEventListener('click',function(){
+      S.vendors[r.vendor]=!S.vendors[r.vendor];
+      b.setAttribute('aria-pressed', S.vendors[r.vendor]?'true':'false');
+      renderBody();
+    });
+    box.appendChild(b);
+  });
+}
+function buildColChips(){
+  var box=document.getElementById('colChips');
+  var keep=document.getElementById('multiOnly');
+  box.innerHTML=''; box.appendChild(keep);
+  COLS[S.kind].forEach(function(c){
+    var b=document.createElement('button');
+    b.className='chip'; b.textContent=c.label;
+    b.setAttribute('aria-pressed', S.cols[S.kind][c.k]?'true':'false');
+    b.addEventListener('click',function(){
+      S.cols[S.kind][c.k]=!S.cols[S.kind][c.k];
+      b.setAttribute('aria-pressed', S.cols[S.kind][c.k]?'true':'false');
+      renderHead(); renderBody();
+    });
+    box.appendChild(b);
+  });
+}
+function buildResOptions(){
+  var sel=document.getElementById('res');
+  var found={};
+  rowsOfKind(S.kind).forEach(function(r){
+    ['official','tcINTL','tcLLM'].forEach(function(k){
+      var m=r.p[k]; if(!m) return;
+      Object.keys(m).forEach(function(res){found[res]=(found[res]||0)+1;});
+    });
+  });
+  var keys=Object.keys(found).sort(function(a,b){
+    var ia=RES_ORDER.indexOf(a), ib=RES_ORDER.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib);
+  });
+  sel.innerHTML=keys.map(function(k){return '<option value="'+k+'">'+k+'（'+found[k]+' 個報價）</option>';}).join('');
+  var prefer = S.kind==='t2i' ? '1K' : '1080P';
+  S.res = keys.indexOf(prefer)>=0 ? prefer : keys[0];
+  sel.value=S.res;
+}
+function setKind(k,skipHash){
+  S.kind=k;
+  if(!skipHash){ try{ history.replaceState(null,'','#'+k); }catch(e){} }
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.setAttribute('aria-selected', t.dataset.kind===k?'true':'false');
+  });
+  document.getElementById('ctlRatio').hidden = (k!=='t2t');
+  document.getElementById('ctlCache').hidden = (k!=='t2t');
+  document.getElementById('ctlPeak').hidden  = (k!=='t2t');
+  document.getElementById('ctlRes').hidden   = (k==='t2t');
+  if(k!=='t2t') buildResOptions();
+  buildVendorChips(); buildColChips(); renderHead(); renderBody();
+}
+
+/* init column visibility */
+Object.keys(COLS).forEach(function(k){
+  S.cols[k]={};
+  COLS[k].forEach(function(c){ S.cols[k][c.k]=true; });
+});
+
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){setKind(t.dataset.kind);});
+});
+document.getElementById('multiOnly').addEventListener('click',function(){
+  S.multiOnly=!S.multiOnly; this.setAttribute('aria-pressed',S.multiOnly?'true':'false'); renderBody();
+});
+document.getElementById('q').addEventListener('input',function(e){S.q=e.target.value;renderBody();});
+document.getElementById('ratio').addEventListener('input',function(e){
+  S.ratio=+e.target.value; document.getElementById('ratioOut').textContent=S.ratio+' : 1'; renderBody();
+});
+document.getElementById('cache').addEventListener('input',function(e){
+  S.cache=+e.target.value; document.getElementById('cacheOut').textContent=S.cache+'%'; renderBody();
+});
+document.getElementById('res').addEventListener('change',function(e){S.res=e.target.value;renderBody();});
+document.getElementById('sort').addEventListener('change',function(e){S.sort=e.target.value;renderBody();});
+document.getElementById('curDisc').addEventListener('input',function(e){
+  var v=parseFloat(e.target.value); S.curDisc=isFinite(v)?v:95; renderBody();
+});
+document.getElementById('peakSeg').addEventListener('click',function(e){
+  var b=e.target.closest('.seg'); if(!b) return;
+  S.peak=b.dataset.peak;
+  this.querySelectorAll('.seg').forEach(function(x){x.setAttribute('aria-pressed', x===b?'true':'false');});
+  renderBody();
+});
+
+/* theme toggle */
+var modes=['自動','淺色','深色'], mi=0;
+document.getElementById('themeBtn').addEventListener('click',function(){
+  mi=(mi+1)%3;
+  if(mi===0) document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', mi===1?'light':'dark');
+  this.textContent='主題：'+modes[mi];
+});
+
+/* stamps */
+document.getElementById('stampDate').textContent='資料截至 '+DATA.generated;
+document.getElementById('stampCount').textContent=ROWS.length+' 個報價點';
+['t2t','t2i','t2v'].forEach(function(k){
+  document.getElementById('cnt-'+k).textContent=rowsOfKind(k).length+' 個報價點';
+});
+
+var initial=(location.hash||'').replace('#','');
+setKind(['t2t','t2i','t2v'].indexOf(initial)>=0?initial:'t2t', true);
+window.addEventListener('hashchange',function(){
+  var k=(location.hash||'').replace('#','');
+  if(['t2t','t2i','t2v'].indexOf(k)>=0&&k!==S.kind) setKind(k,true);
+});
+})();
+</script>
+</body>
+</html>
